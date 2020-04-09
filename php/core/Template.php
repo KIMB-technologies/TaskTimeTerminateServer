@@ -1,15 +1,15 @@
 <?php
 /** 
- * KIMB-Forms-Project
- * https://github.com/KIMB-technologies/KIMB-Forms-Project
+ * TaskTimeTerminate Sync-Server
+ * https://github.com/KIMB-technologies/TaskTimeTerminate
  * 
- * (c) 2018 - 2020 KIMB-technologies 
+ * (c) 2020 KIMB-technologies 
  * https://github.com/KIMB-technologies/
  * 
  * released under the terms of GNU Public License Version 3
  * https://www.gnu.org/licenses/gpl-3.0.txt
  */
-defined( 'KIMB-FORMS-PROJECT' ) or die('Invalid Endpoint!');
+defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
 
 /**
  * System Template class
@@ -33,9 +33,8 @@ class Template{
 	private $multiples_data = array();
 	private $inner = null;
 
-	private static $lang = 'de';
+	private static $lang = 'en';
 	private static $allLangs = array(
-		'de',
 		'en'
 	);
 
@@ -66,8 +65,8 @@ class Template{
 					unset($this->placeholder['multiples']);
 				}
 			} catch (Exception $e) {
-			    die( 'Unable to load Template data!' );
-			}			
+				die( 'Unable to load Template data!' );
+			}		
 		}
 	}
 

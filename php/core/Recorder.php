@@ -1,40 +1,27 @@
 <?php
+/** 
+ * TaskTimeTerminate Sync-Server
+ * https://github.com/KIMB-technologies/TaskTimeTerminate
+ * 
+ * (c) 2020 KIMB-technologies 
+ * https://github.com/KIMB-technologies/
+ * 
+ * released under the terms of GNU Public License Version 3
+ * https://www.gnu.org/licenses/gpl-3.0.txt
+ */
+defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
+
 class Recorder {
 
-	const PID_FILE_LINUX = '/run/lock/TaskTimeTerminate';
-	const PID_FILE_MAC = '/private/tmp/TaskTimeTerminate';
-
 	private Dialog $dialog;
-	private $lockfileHandle;
 
 	public function __construct(bool $inTerminal = false) {
-		if($inTerminal){
-			$this->dialog = new InTerminalDialog();
-		}
-		else{
-			switch (Utilities::getOS()){
-				case Utilities::OS_MAC:
-					MacDialog::checkOSPackages();
-					$this->dialog = new MacDialog();
-					break;
-				case Utilities::OS_LINUX:
-					MacDialog::checkOSPackages();
-					$this->dialog = new LinuxDialog();
-					break;
-				case Utilities::OS_WIN:
-					WindowsDialog::checkOSPackages();
-					$this->dialog = new WindowsDialog();
-					break;
-				default:
-					die( PHP_EOL . 'Plattform not supported!!' . PHP_EOL . PHP_EOL);
-			}
-		}
+		$this->dialog = new WebDialog();
 	}
 
 	public function record(bool $forcenew = false) : void {
 		if($this->waitForOpenedDialogs()){
 			$r = Config::getStorageReader('current');
-			ReaderManager::addReader($r);
 			if( empty($r->getArray())){ // first start etc.
 				$r->setArray(array(
 					'name' => '',
@@ -107,43 +94,5 @@ class Recorder {
 		}
 	}
 
-	private function waitForOpenedDialogs() : bool {
-		$lockfile = Config::getStorageDir() . '/openedDialog.lock';
-		
-		$this->lockfileHandle = fopen( $lockfile, 'c' );
-		return flock( $this->lockfileHandle, LOCK_EX );
-	}
-
-	private function unlockDialogs() {
-		flock($this->lockfileHandle, LOCK_UN );
-		fclose($this->lockfileHandle);
-	}
-
-	public static function runOnlyOnce() : void {
-		if( Utilities::getOS() === Utilities::OS_LINUX || Utilities::getOS() === Utilities::OS_MAC ){
-			$osPidFile = Utilities::getOS() === Utilities::OS_LINUX ? self::PID_FILE_LINUX : self::PID_FILE_MAC;
-			$pid = getmypid();
-			if( $pid !== false ){
-				// check if other running
-				if( is_file( $osPidFile ) ){
-					$otherPid = file_get_contents($osPidFile);
-					if( is_numeric($otherPid) ){
-						if( Utilities::getOS() === Utilities::OS_MAC || !posix_kill( intval($otherPid), SIGQUIT ) ){
-							posix_kill( intval($otherPid), SIGKILL );
-						}
-					}
-				}
-				// set yourself running
-				file_put_contents( $osPidFile, $pid, LOCK_EX );
-
-				// delete run file on exit
-				register_shutdown_function( function ($pid, $osPidFile) {
-					if( is_file( $osPidFile ) && file_get_contents($osPidFile) == $pid ){
-						unlink($osPidFile);
-					}
-				}, $pid, $osPidFile);
-			}
-		}
-	}
 }
 ?>

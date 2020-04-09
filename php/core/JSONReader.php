@@ -1,4 +1,16 @@
 <?php
+/** 
+ * TaskTimeTerminate Sync-Server
+ * https://github.com/KIMB-technologies/TaskTimeTerminate
+ * 
+ * (c) 2020 KIMB-technologies 
+ * https://github.com/KIMB-technologies/
+ * 
+ * released under the terms of GNU Public License Version 3
+ * https://www.gnu.org/licenses/gpl-3.0.txt
+ */
+defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
+
 /**
  * A JSON Reader, storage using json files, as defined in Reader.
  */
@@ -7,7 +19,7 @@ class JSONReader extends Reader {
 	/**
 	 * Deletes a JSON file. (needs exclusive rights)
 	 */
-	public static function deleteFile( string $name ) : bool{
+	public static function deleteFile( string $name ) : bool {
 		$file = parent::$path . $name . '.json';
 		if( !is_file( $file ) && !is_file( $file . '.lock' ) ){
 			return true;

@@ -1,15 +1,18 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
+/** 
+ * TaskTimeTerminate Sync-Server
+ * https://github.com/KIMB-technologies/TaskTimeTerminate
+ * 
+ * (c) 2020 KIMB-technologies 
+ * https://github.com/KIMB-technologies/
+ * 
+ * released under the terms of GNU Public License Version 3
+ * https://www.gnu.org/licenses/gpl-3.0.txt
+ */
+define( 'TaskTimeTerminate', 'API' );
 
-/*
-file_put_contents(__DIR__ . '/../data/add.txt', print_r($_POST, true), FILE_APPEND );
-Array
-(
-    [group] => tGroup
-    [token] => TToken
-    [client] => TName
-    [data] => [{"begin":1585075742,"end":1585076102,"name":"Test","category":"Huii"}, ...]
-)
-*/
+require_once( __DIR__ . '/../core/load.php' );
+
+$a = new APIAdd();
+$a->request($_POST);
 ?>
-["ok"]

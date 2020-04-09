@@ -1,4 +1,16 @@
 <?php
+/** 
+ * TaskTimeTerminate Sync-Server
+ * https://github.com/KIMB-technologies/TaskTimeTerminate
+ * 
+ * (c) 2020 KIMB-technologies 
+ * https://github.com/KIMB-technologies/
+ * 
+ * released under the terms of GNU Public License Version 3
+ * https://www.gnu.org/licenses/gpl-3.0.txt
+ */
+defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
+
 /**
  * Reader class to define the api of a reader and/ or writer.
  * 

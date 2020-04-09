@@ -1,4 +1,15 @@
 <?php
+/** 
+ * TaskTimeTerminate Sync-Server
+ * https://github.com/KIMB-technologies/TaskTimeTerminate
+ * 
+ * (c) 2020 KIMB-technologies 
+ * https://github.com/KIMB-technologies/
+ * 
+ * released under the terms of GNU Public License Version 3
+ * https://www.gnu.org/licenses/gpl-3.0.txt
+ */
+defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
 
 class StatsLoader {
 
@@ -74,15 +85,5 @@ class StatsLoader {
 			}
 		}
 		return $dataset;
-	}
-
-	public static function saveDayTasks(array $array ) : void {
-		$c = Config::getStorageReader('config');
-		if( $c->isValue(['sync', 'directory']) ){
-			(new DirectoryStatsAccess())->setDayTasks($array);
-		}
-		if( $c->isValue(['sync', 'server']) ){
-			(new ServerStatsAccess())->setDayTasks($array);
-		}
 	}
 }

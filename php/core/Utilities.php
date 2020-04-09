@@ -1,18 +1,22 @@
 <?php
+/** 
+ * TaskTimeTerminate Sync-Server
+ * https://github.com/KIMB-technologies/TaskTimeTerminate
+ * 
+ * (c) 2020 KIMB-technologies 
+ * https://github.com/KIMB-technologies/
+ * 
+ * released under the terms of GNU Public License Version 3
+ * https://www.gnu.org/licenses/gpl-3.0.txt
+ */
+defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
+
 /**
  * Class with useful functions.
  */
 class Utilities {
 
-	const VERSION = 'v0.9.5 beta';
-
-	/**
-	 * OS Consts
-	 */
-	const OS_MAC = "mac";
-	const OS_WIN = "win";
-	const OS_LINUX = "lin";
-	const OS_OTHER = "oth";
+	const VERSION = 'v0.0.0a';
 
 	/**
 	 * Possible chars for:
@@ -66,22 +70,6 @@ class Utilities {
 			$r .= $chars[random_int(0, $charAnz-1)];
 		}
 		return $r;
-	}
-
-	public static function getOS() : string {
-		$os = php_uname('s');
-		if( stripos($os, 'darwin') !== false ){
-			return self::OS_MAC;
-		}
-		else if( stripos($os, 'linux') !== false ){
-			return self::OS_LINUX;
-		}
-		else if( stripos($os, 'windows') !== false ){
-			return self::OS_WIN;
-		}
-		else{
-			return self::OS_OTHER;
-		}
 	}
 }
 
