@@ -1,0 +1,19 @@
+# # # # # 
+# File only for development !!!
+# # # # # 
+
+version: "2"
+
+services:
+  ttt_sync:
+    build:
+      context: .
+    container_name: ttt_sync_dev
+    ports:
+      - "8080:80"
+    volumes:
+      - ./php/:/php-code/
+      - ./data/:/php-code/data/
+    environment:
+      - DEVMODE=true
+      - CONF_DOMAIN=http://localhost:8080/

@@ -1,0 +1,14 @@
+version: "2"
+
+services:
+  ttt_sync:
+    image: kimbtechnologies/ttt_sync:latest
+    restart: always
+    container_name: ttt_sync
+    ports:
+      - "8080:80"
+    volumes:
+      - ./data/:/php-code/data/
+    environment:
+      - DEVMODE=false
+      - CONF_DOMAIN=http://localhost:8080/
