@@ -11,9 +11,15 @@
  */
 defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
 
-class API {
+abstract class API {
 
-	private array $output = array();
+	const CLIENT_NAME_PREG = InputParser::DEVICE_NAME_PREG;
+	const GROUP_NAME_PREG = '/^[A-Za-z0-9]+$/';
+	const TOKEN_VALUE_PREG = self::GROUP_NAME_PREG;
+
+	protected array $output = array();
+	protected Login $login;
+	protected array $requestData = array();
 
 	private bool $hasError = false;
 	private string $errorMsg = '';
@@ -25,23 +31,58 @@ class API {
 	}
 
 	public function request(array $post) : void {
-
+		$this->validatePost();
+		if( !$this->hasError ){
+			$this->login = new Login($post['group'], $post['client'], $post['token']);
+			if( $this->login->isLoggedIn()){
+				$this->handleAPITask();
+			}
+			else{
+				$this->error('Unable to log in!');
+			}
+		}
 	}
 
+	/**
+	 * Use $this->login and $this->requestData
+	 * Give error via $this->error() or output into array $this->output
+	 */
+	abstract protected function handleAPITask() : void;
+
 	private function validatePost(array $post) : void {
-		if( empty( $post['group'] ) || empty( $post['token'] ) || empty( $post['client'] ) || empty( $post['data'] ) ){
+		if( !isset( $post['group'] ) || !isset( $post['token'] ) || !isset( $post['client'] ) || !isset( $post['data'] ) ){
 			$this->error('Missing parameter!');
 			return;
 		}
-		/*
-		[group] => tGroup
-		[token] => TToken
-		[client] => TName
-		[data]
-		*/
+		if( !is_string( $post['group'] ) || !is_string( $post['token'] ) || !is_string( $post['client'] ) || !is_string( $post['data'] ) ){
+			$this->error('Invalid parameter type!');
+			return;
+		}
+		if( !$this->checkByRegEx($post['group'], self::GROUP_NAME_PREG) ){
+			$this->error('Invalid Group parameter!');
+			return;
+		}
+		if( !$this->checkByRegEx($post['token'], self::TOKEN_VALUE_PREG) ){
+			$this->error('Invalid Token parameter!');
+			return;
+		}
+		if( !$this->checkByRegEx($post['client'], self::CLIENT_NAME_PREG) ){
+			$this->error('Invalid Client parameter!');
+			return;
+		}
+		if( !empty( $post['data'] ) ){
+			$this->requestData = json_decode( $post['data'], true );
+			if( ( empty($this->requestData) && $this->requestData !== array() )
+				|| !is_array($this->requestData) ) {
+					$this->error('Invalid JSON given as Data!');
+			}
+		}
+		else{
+			$this->error('Invalid Data given!');
+		}
 	}
 
-	public function error(string $msg = 'Unknown Error') {
+	protected function error(string $msg = 'Unknown Error') {
 		$this->hasError = true;
 		$this->errorMsg = $msg;
 	}
@@ -53,6 +94,10 @@ class API {
 		}
 		header('Content-Type: application/json; charset=utf-8');
 		echo json_encode($this->output, JSON_PRETTY_PRINT);
+	}
+
+	private function checkByRegEx( string $s, string $reg ) : bool {
+		return !empty($s) && preg_match($reg, $s) === 1;
 	}
 }
 ?>

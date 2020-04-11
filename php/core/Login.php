@@ -11,23 +11,16 @@
  */
 defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
 
-class APIAdd extends API {
+class Login {
 
-	protected function handleAPITask() : void{
-		$this->login;
-		$this->requestData;
-		/* array(
-			array(
-				"begin" => 1585075742,
-				"end" => 1585076102,
-				"name" => "Test",
-				"category" => "Huii"
-			), ...
-		);*/
-	 
-		// $this->error('Message');
-		$this->output = array( 'ok' );
+	private bool $loggedIn = false;
+
+	public function __construct( string $group, string $client, string $token ) {
+		
 	}
 
+	public function isLoggedIn() : bool {
+		return $this->loggedIn;
+	}
 }
 ?>
