@@ -38,9 +38,6 @@ div#footer a, div#footer a:visited, div#footer a:hover {
 	color: white;
 }
 
-div#apiviewer a{
-	text-decoration: none;
-}
 div.achtung {
 	border: 2px solid red;
 	padding: 5px;

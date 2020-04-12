@@ -15,6 +15,11 @@ defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
 error_reporting( !empty($_ENV['DEVMODE']) && $_ENV['DEVMODE'] == 'true' ? E_ALL : 0 );
 // Inits
 new Config();
+Reader::changePath(realpath(__DIR__ . '/../data/'));
+if( TaskTimeTerminate === 'GUI' ){
+	session_name( 'TaskTimeTerminate' );
+	session_start();
+}
 
 // Autoloader
 spl_autoload_register(function ($class) {

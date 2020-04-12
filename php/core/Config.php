@@ -25,8 +25,13 @@ class Config {
 		}
 	}
 
+	// without / at the end!
 	public static function getBaseUrl() : string {
-		return empty($_ENV['CONF_DOMAIN']) ? self::DEFAULT_DOMAIN : $_ENV['CONF_DOMAIN'];
+		$d = empty($_ENV['CONF_DOMAIN']) ? self::DEFAULT_DOMAIN : $_ENV['CONF_DOMAIN'];
+		if( substr($d, -1) === '/' ){
+			$d = substr($d, 0, -1);
+		}
+		return $d;
 	}
 }
 ?>

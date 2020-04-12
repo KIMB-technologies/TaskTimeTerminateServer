@@ -158,6 +158,8 @@ class Template{
 			$this->htmldata = $a[0] . $middle . $b[1];
 		}
 
+		$this->placeholder['%%SERVERURL%%'] = Config::getBaseUrl();
+
 		if( $this->inner !== null ){
 			$this->placeholder['%%INNERCONTAINER%%'] = $this->inner->getOutputString();
 		}

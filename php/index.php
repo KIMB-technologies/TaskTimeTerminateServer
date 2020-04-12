@@ -12,4 +12,36 @@
 define( 'TaskTimeTerminate', 'GUI' );
 
 require_once( __DIR__ . '/core/load.php' );
+
+$param = new ParamParser();
+$login = new Login();
+if( !$login->isLoggedIn() && $param->isLoginPost() ){
+	$login->userLogin($param->loginPost('group'), $param->loginPost('password'));
+}
+$gui = new WebGUI($param, $login);
+
+if( $login->isLoggedIn() ){
+	$gui->loggedIn();
+	switch ($param->getTask()) {
+		case ParamParser::TASK_ACCOUNT:
+			$gui->accountManage();
+			break;
+		case ParamParser::TASK_DEVICES:
+			$gui->deviceManage();
+			break;
+		case ParamParser::TASK_RECORD:
+			$gui->addTaskRecord();
+			break;
+		case ParamParser::TASK_STATS:
+			$gui->showStats();
+			break;
+		case ParamParser::TASK_HOME:
+		case ParamParser::TASK_NONE:
+		default:
+			$gui->home();
+	}
+}
+else{
+	$gui->loginForm();
+}
 ?>

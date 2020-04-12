@@ -11,5 +11,5 @@ services:
       - ./data/:/php-code/data/
     environment:
       - DEVMODE=false
-	- CONF_DOMAIN=http://localhost:8080/
-	- CONF_TIMEZONE=Europe/Berlin # php timezone string
+	    - CONF_DOMAIN=http://localhost:8080/
+	    - CONF_TIMEZONE=Europe/Berlin # php timezone string
