@@ -16,14 +16,20 @@ class APIAdd extends API {
 	protected function handleAPITask() : void{
 		$this->login;
 		$this->requestData;
-		/* array(
-			array(
-				"begin" => 1585075742,
-				"end" => 1585076102,
-				"name" => "Test",
-				"category" => "Huii"
-			), ...
-		);*/
+		/* 
+		array(
+			'file' => '2020-07-03',
+			'tasks' => array(
+					array(
+						"begin" => 1585075742,
+						"end" => 1585076102,
+						"name" => "Test",
+						"category" => "Huii"
+					), ...
+				)
+			)
+		);
+		*/
 	 
 		// $this->error('Message');
 		$this->output = array( 'ok' );
