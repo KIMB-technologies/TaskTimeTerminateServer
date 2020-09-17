@@ -18,7 +18,7 @@ class APIAdd extends API {
 		$this->requestData;
 		/* 
 		array(
-			'file' => '2020-07-03',
+			'day' => 1585075742,
 			'tasks' => array(
 					array(
 						"begin" => 1585075742,
