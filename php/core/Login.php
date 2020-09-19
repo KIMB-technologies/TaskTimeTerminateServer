@@ -14,25 +14,20 @@ defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
 class Login {
 
 	private bool $loggedIn = false;
+	private string $device;
+	private string $group;
+
 	private JSONReader $groupList;
 
 	public function __construct( string $group, string $client, string $token ) {
+		$this->groupList = new JSONReader('groups');
 		if(!empty($group) && !empty($client) && !empty($token)){
 			$this->apiClientLogin($group, $client, $token);
 		}
 
 		if( TaskTimeTerminate === 'GUI' && session_status() === PHP_SESSION_ACTIVE ){
 			$this->userSessionLogin();
-
-			if( $this->isLoggedIn() ){
-				$_SESSION['login_time'] = time();
-			}
-			else{
-				$_SESSION['login'] = false;
-			}
 		}
-
-		$this->groupList = new JSONReader('groups');
 	}
 
 	private function apiClientLogin(string $group, string $client, string $token) : void {
@@ -40,26 +35,57 @@ class Login {
 			$did = $this->groupList->searchValue([$group, 'devices'], $client, 'name');
 			if( $did !== false ){
 				if( $this->groupList->getValue([$group, 'devices', $did, 'token']) === $token ){
-					$this->loggedIn = true;
+					$this->logUserIn($group, $client);
+					return;
 				}
 			}
 		}
+		$this->loggedIn = false;
+		$_SESSION['login'] = false;
 	}
 
 	private function userSessionLogin() : void {
 		$this->loggedIn = isset($_SESSION['login']) && $_SESSION['login'] === true
 			&& $_SESSION['login_time'] + 600 > time();
+		if( $this->isLoggedIn() ){
+			$_SESSION['login_time'] = time();
+			$this->group = $_SESSION['group'];
+		}
+		else{
+			$_SESSION['login'] = false;
+		}
 	}
 
 	public function userLogin(string $group, string $password) : void {
-		
+		if( $this->groupList->isValue([$group]) ){
+			if(self::checkHashedPassword($password, $this->groupList->getValue([$group, 'passhash']))){
+				$this->logUserIn($group);
+				return;
+			}
+		}
+		$_SESSION['login_time'] = 0;
+		$_SESSION['login'] = false;
+	}
 
+	private function logUserIn(string $group, string $device = "") : void {
+		$this->loggedIn = true;
+		$this->group = $group;
+		$this->device = $device;
 		$_SESSION['login_time'] = time();
-		$_SESSION['login'] = $this->isLoggedIn();
+		$_SESSION['login'] = true;
+		$_SESSION['group'] = $group;
 	}
 
 	public function isLoggedIn() : bool {
 		return $this->loggedIn;
+	}
+
+	public function getGroup() : string {
+		return $this->isLoggedIn() ? $this->group : "";
+	}
+
+	public function getDeviceName() : string {
+		return $this->isLoggedIn() ? $this->device : "";
 	}
 
 	private static function checkHashedPassword(string $pwInput, string $pwDB) : bool {

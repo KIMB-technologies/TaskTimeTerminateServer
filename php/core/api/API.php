@@ -13,6 +13,8 @@ defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
 
 abstract class API {
 
+	const FILENAME_PREG = '/^\d{4}-(0|1)\d-[0-3]\d\.json$/';
+
 	const CLIENT_NAME_PREG = InputParser::DEVICE_NAME_PREG;
 	const GROUP_NAME_PREG = '/^[A-Za-z0-9]+$/';
 	const TOKEN_VALUE_PREG = self::GROUP_NAME_PREG;

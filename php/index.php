@@ -21,7 +21,6 @@ if( !$login->isLoggedIn() && $param->isLoginPost() ){
 $gui = new WebGUI($param, $login);
 
 if( $login->isLoggedIn() ){
-	$gui->loggedIn();
 	switch ($param->getTask()) {
 		case ParamParser::TASK_ACCOUNT:
 			$gui->accountManage();

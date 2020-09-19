@@ -45,7 +45,7 @@ class ParamParser {
 			return !empty($_POST['group']) ? preg_replace('/[^A-Za-z0-9]/', '', $_POST['group']) : '';
 		}
 		else if($name === 'password' ){
-			if( !empty($pw) && is_string($_POST['password']) ) {
+			if( !empty($_POST['password']) && is_string($_POST['password']) ) {
 				$pw = preg_replace('/[^ -~]/', '', $_POST['password']);
 				if( strlen($pw) < 200 && strlen($pw) > 4 ){
 					return $pw;

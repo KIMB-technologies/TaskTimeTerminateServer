@@ -14,26 +14,34 @@ defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
 class APIAdd extends API {
 
 	protected function handleAPITask() : void{
-		$this->login;
-		$this->requestData;
-		/* 
-		array(
-			'day' => 1585075742,
-			'tasks' => array(
-					array(
-						"begin" => 1585075742,
-						"end" => 1585076102,
-						"name" => "Test",
-						"category" => "Huii"
-					), ...
-				)
-			)
-		);
-		*/
-	 
-		// $this->error('Message');
-		$this->output = array( 'ok' );
-	}
+		$array = array_values(array_filter( $this->requestData['tasks'], function ($a) {
+			return isset($a['begin']) && isset($a['end']) && isset($a['name']) && isset($a['category'])
+				&& is_int($a['begin']) && $a['begin'] > 0
+				&& is_int($a['end']) && $a['end'] > 0
+				&& InputParser::checkNameInput( $a['name'] )
+				&& InputParser::checkCategoryInput( $a['category'] );
+		}));
+		if(empty($array) || !isset($this->requestData['day'])
+			|| !is_int($this->requestData['day']) || $this->requestData['day'] < 0 ){
+			$this->error('Invalid data.');
+			return;
+		}
 
+		$groupDir = __DIR__ . '/../../data/' . $this->login->getGroup() . '/' . $this->device;
+		if(!is_dir( $groupDir )){
+			if( !mkdir( $groupDir, 0740, true ) ){
+				$this->error('Unable to create storage dir.');
+				return;
+			}
+		}
+		
+		$filename = $groupDir . '/' . date('Y-m-d', $this->requestData['day']) . '.json';
+		if(file_put_contents( $filename, json_encode( $array, JSON_PRETTY_PRINT ))){
+			$this->output = array( 'ok' );
+		}
+		else{
+			$this->error('Error saving data.');
+		}	
+	}
 }
 ?>
