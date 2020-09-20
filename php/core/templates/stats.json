@@ -1,4 +1,12 @@
 {
 	"%%NOTEDISABLE%%" : "disable",
-	"%%NOTEMSG%%" : ""
+	"%%NOTEMSG%%" : "",
+	"%%TODAY%%" : "",
+	"multiples" : {
+		"Devices" : {
+			"%%VALUE%%" : "",
+			"%%NAME%%" : ""
+		}
+	},
+	"%%GRAPH%%" : ""
 }

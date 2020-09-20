@@ -22,11 +22,7 @@ class AddEdit {
 		$this->temp = $temp;
 		$this->serverDir = API::getStorageDir($this->login->getGroup(), 'server');
 
-		/**
-		 * TODO
-		 */
-
-		if( $_SERVER['REQUEST_METHOD'] === 'POST'){
+		if( $_SERVER['REQUEST_METHOD'] === 'POST' ){
 			$this->addNew();
 		}
 		if( isset( $_GET['day'] ) ){

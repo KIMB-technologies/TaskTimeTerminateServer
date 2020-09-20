@@ -2,5 +2,55 @@
 %%NOTEMSG%%
 </div>
 
+<h3>Select data</h3>
+<form action="%%SERVERURL%%/?task=stats" method="post">
+	<p>
+		Timespan:<br>
+		<select name="time">
+			<option value="today" selected>Today</option>
+			<option value="day">Day</option>
+			<option value="week">Week</option>
+			<option value="month">Month</option>
+			<option value="range">Range</option>
+			<option value="all">All</option>
+		</select>
+		<span id="rangeblock" class="disable">
+			from <input type="text" name="range-from" id="rf" placeholder="2020-03-04" pattern="\d{4}-\d{2}-\d{2}" style="width:100px;">
+			to <input type="text" name="range-to" id="rt" placeholder="2020-03-04" value="%%TODAY%%"  pattern="\d{4}-\d{2}-\d{2}" style="width:100px;">
+		</span>
+	</p>
+	<p>
+		Filter categories:<br>
+		<input type="text" name="cats" placeholder="Hobby,Home">
+	</p>
+	<p>
+		Filter tasks:<br>
+		<input type="text" name="names" placeholder="Coding,Gaming">
+	</p>
+	<p>
+		Filter Devices:<br>
+		<select name="devices[]" multiple>
+			<!--MULTIPLE-Devices-BEGIN-->
+			<option value="%%VALUE%%" selected>%%NAME%%</option>
+			<!--MULTIPLE-Devices-END-->
+		</select>
+	</p>
+	<p><input type="submit" value="Show"></p>
+</form>
 
-stats
+<script>
+$("select[name=time]").change(() => {
+	if($("select[name=time]").val() == "range" ){
+		$("span#rangeblock").removeClass("disable");
+	}
+	else {
+		$("span#rangeblock").addClass("disable");
+	}
+});
+</script>
+
+<h3>Graph</h3>
+
+<pre>
+	%%GRAPH%%
+</pre>
