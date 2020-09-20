@@ -1,0 +1,14 @@
+{
+	"%%NOTEDISABLE%%" : "disable",
+	"%%NOTEMSG%%" : "",
+	"multiples" : {
+		"Data" : {
+			"%%NAME%%" : "Name"
+		}
+	},
+	"%%YEAR%%" : "",
+	"%%MON%%" : "",
+	"%%DAY%%" : "",
+	"%%HOUR%%" : "",
+	"%%MIN%%" : ""
+}

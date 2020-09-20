@@ -60,15 +60,15 @@ abstract class API {
 			$this->error('Invalid parameter type!');
 			return;
 		}
-		if( !$this->checkByRegEx($post['group'], self::GROUP_NAME_PREG) ){
+		if( !self::checkByRegEx($post['group'], self::GROUP_NAME_PREG) ){
 			$this->error('Invalid Group parameter!');
 			return;
 		}
-		if( !$this->checkByRegEx($post['token'], self::TOKEN_VALUE_PREG) ){
+		if( !self::checkByRegEx($post['token'], self::TOKEN_VALUE_PREG) ){
 			$this->error('Invalid Token parameter!');
 			return;
 		}
-		if( !$this->checkByRegEx($post['client'], self::CLIENT_NAME_PREG) ){
+		if( !self::checkByRegEx($post['client'], self::CLIENT_NAME_PREG) ){
 			$this->error('Invalid Client parameter!');
 			return;
 		}
@@ -98,17 +98,28 @@ abstract class API {
 		echo json_encode($this->output, JSON_PRETTY_PRINT);
 	}
 
-	private function checkByRegEx( string $s, string $reg ) : bool {
+	private static function checkByRegEx( string $s, string $reg ) : bool {
 		return !empty($s) && preg_match($reg, $s) === 1;
 	}
 
 	public static function deleteGroupDir(string $group) : bool {
-		$groupDir = __DIR__ . '/../../data/' . $group . '/';
+		$groupDir = self::getStorageDir($group);
 		if( is_dir($groupDir) ){
 			return Utilities::deleteDirRecursive($groupDir);
 		}
 		else{
 			return true;
+		}
+	}
+
+	public static function getStorageDir(string $group, string $device = '') : string {
+		if( self::checkByRegEx($group, self::GROUP_NAME_PREG) ){
+			if( !empty($device) && self::checkByRegEx($device, self::CLIENT_NAME_PREG) ){
+				return __DIR__ . '/../../data/' . $group .  '/' . $device . '/';
+			}
+			else if( empty($device) ){
+				return __DIR__ . '/../../data/' . $group . '/';
+			}
 		}
 	}
 }

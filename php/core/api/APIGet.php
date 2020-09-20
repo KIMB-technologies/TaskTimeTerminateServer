@@ -22,7 +22,7 @@ class APIGet extends API {
 		}
 		$device = $this->requestData['device'];
 		$file = $this->requestData['file'];
-		$groupPath = __DIR__ . '/../../data/' . $this->login->getGroup() . '/' . $device . '/' . $file;
+		$groupPath = parent::getStorageDir($this->login->getGroup(), $device) . $file;
 
 		if( is_file($groupPath) ){
 			$c = json_decode(file_get_contents($groupPath), true);

@@ -1,0 +1,13 @@
+{
+	"%%NOTEDISABLE%%" : "disable",
+	"%%NOTEMSG%%" : "",
+	"multiples" : {
+		"Devices" : {
+			"%%NAME%%" : "Name",
+			"%%DID%%" : "-1"
+		},
+		"Data" : {
+			"%%NAME%%" : "Name"
+		}
+	}
+}

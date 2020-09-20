@@ -1,0 +1,51 @@
+<div class="note %%NOTEDISABLE%%" >
+%%NOTEMSG%%
+</div>
+
+<h3>Add task</h3>
+<p>Add a task to the virtual device <code>server</code>.</p>
+<form action="%%SERVERURL%%/?task=record" method="post">
+	<table>
+		<tr>
+			<td>Category</td>
+			<td><input type="text" placeholder="Category" name="category"></td>
+		</tr>
+		<tr>
+			<td>Task</td>
+			<td><input type="text" placeholder="Task" name="task"></td>
+		</tr>
+		<tr>
+			<td>Begin</td>
+			<td>
+				<input type="number" placeholder="YYYY" id="bY" name="begin_Y" size=4 max=3000 min=1970 value="%%YEAR%%">
+				<input type="number" placeholder="mm" id="bm" name="begin_m" size=2 max=12 min=1 value="%%MON%%">
+				<input type="number" placeholder="dd" id="bd" name="begin_d" size=2 max=31 min=1 value="%%DAY%%">
+				&nbsp;&nbsp; &nbsp;&nbsp;
+				<input type="number" placeholder="hh" id="bh" name="begin_h" size=2 max=23 min=0 value="%%HOUR%%">
+				<input type="number" placeholder="mm" id="bi" name="begin_i" size=2 max=59 min=0 value="%%MIN%%">
+			</td>
+		</tr>
+		<tr>
+			<td>End</td>
+			<td>
+				<input type="number" placeholder="YYYY" id="eY" name="end_Y" size=4 max=3000 min=1970 value="%%YEAR%%">
+				<input type="number" placeholder="mm" id="em" name="end_m" size=2 max=12 min=1 value="%%MON%%">
+				<input type="number" placeholder="dd" id="ed" name="end_d" size=2 max=31 min=1 value="%%DAY%%">
+				&nbsp;&nbsp; &nbsp;&nbsp;
+				<input type="number" placeholder="hh" id="eh" name="end_h" size=2 max=23 min=0>
+				<input type="number" placeholder="mm" id="ei" name="end_i" size=2 max=59 min=0>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="submit" value="Add task"></td>
+		</tr>
+	</table>	
+</form>
+
+<h3>Edit data</h3>
+<ul>
+	<!--MULTIPLE-Data-BEGIN-->
+		<li><a href="%%SERVERURL%%/?task=record&device=%%NAME%%"><code>%%NAME%%</code></a></li>
+	<!--MULTIPLE-Data-END-->
+</ul>

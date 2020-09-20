@@ -142,14 +142,100 @@ class WebGUI {
 
 	public function deviceManage() : void {
 		$this->mainTemp->setContent('TITLE', 'Device Management');
+		$device = new Template('device');
+		$this->mainTemp->includeTemplate($device);
+
+		$r = $this->login->getGroupList();
+		$myGroup = $this->login->getGroup();
+		if( !empty($_POST['device']) || !empty($_GET['regenerate']) || !empty($_GET['delete']) ){
+			$device->setContent('NOTEDISABLE','');
+			if( !empty($_POST['device']) && InputParser::checkDeviceName($_POST['device']) ){
+				$name = $_POST['device'];
+				$did = $r->searchValue([$myGroup, 'devices'], $name, 'name');
+				if( $did === false ){
+					$token = Utilities::randomCode(50, Utilities::ID);
+					if($r->setValue([$myGroup, 'devices', null], array( 'name' => $name, 'token' => $token))){
+						$device->setContent('NOTEMSG','Added device "'. $name .'" with token<br>"<code>'. $token .'</code>"!');
+					}
+					else{
+						$device->setContent('NOTEMSG','Error adding device!');
+					}
+				}
+				else{
+					$device->setContent('NOTEMSG','Device already exists!');
+				}
+			}
+			else if(!empty($_GET['regenerate']) && InputParser::checkDeviceName($_GET['regenerate'])){
+				$name = $_GET['regenerate'];
+				$did = $r->searchValue([$myGroup, 'devices'], $name, 'name');
+				if( $did !== false ){
+					$token = Utilities::randomCode(50, Utilities::ID);
+					if($r->setValue([$myGroup, 'devices', $did, 'token'], $token)){
+						$device->setContent('NOTEMSG','Generated new token "<code>'. $token .'</code>" for device "'. $name .'"!');
+					}
+					else{
+						$device->setContent('NOTEMSG','Error saving new token!');
+					}
+				}
+				else{
+					$device->setContent('NOTEMSG','Device does not exist!');
+				}
+			}
+			else if(!empty($_GET['delete']) && InputParser::checkDeviceName($_GET['delete'])){
+				$name = $_GET['delete'];
+				$did = $r->searchValue([$myGroup, 'devices'], $name, 'name');
+				if( $did !== false ){
+					if($r->setValue([$myGroup, 'devices', $did], null)){
+						$device->setContent('NOTEMSG','Deleted device "'. $name .'"!');
+					}
+					else{
+						$device->setContent('NOTEMSG','Error deleting device!');
+					}
+				}
+				else{
+					$device->setContent('NOTEMSG','Device does not exist!');
+				}
+			}
+			else{
+				$device->setContent('NOTEMSG','Invalid format!');
+			}
+		}
+		
+		$dv = array();
+		foreach($r->getValue([$this->login->getGroup(), 'devices']) as $d){
+			$dv[] = array(
+				"NAME" => $d['name'],
+				"DID" => $d['name']
+			);
+		}
+		$device->setMultipleContent('Devices', $dv);
+
+		if( is_dir(API::getStorageDir($myGroup)) ){
+			$ds = array();
+			foreach( scandir(API::getStorageDir($myGroup)) as $d){
+				if( $d !== '.' && $d !== '..' ){
+					$ds[] = array( "NAME" => $d );
+				}
+			}
+			$device->setMultipleContent('Data', $ds);
+		}
 	}
 
 	public function addTaskRecord() : void {
-		$this->mainTemp->setContent('TITLE', 'Add Task');
+		$this->mainTemp->setContent('TITLE', 'Add & Edit Tasks');
+		$edit = new Template('edit');
+		$this->mainTemp->includeTemplate($edit);
+
+		new AddEdit($edit, $this->login);		
 	}
 
 	public function showStats() : void {
 		$this->mainTemp->setContent('TITLE', 'Statistics');
+
+		$stats = new Template('stats');
+		$this->mainTemp->includeTemplate($stats);
+
+		new Stats($stats, $this->login);	
 	}
 
 	public function home() : void {
@@ -178,6 +264,5 @@ class WebGUI {
 	public function __destruct(){
 		$this->mainTemp->output();
 	}
-	
 }
 ?>

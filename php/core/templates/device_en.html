@@ -1,0 +1,47 @@
+<div class="note %%NOTEDISABLE%%" >
+%%NOTEMSG%%
+</div>
+
+<h3>Active devices</h3>
+	<table class="accounttable">
+		<tr>
+			<th>Device</th>
+			<th>Regenerate token</th>
+			<th>Delete</th>
+		</tr>
+		<!--MULTIPLE-Devices-BEGIN-->
+			<tr>
+				<td><code>%%NAME%%</code></td>
+				<td><a href="%%SERVERURL%%/?task=devices&regenerate=%%DID%%" onclick="return confirm('Regenerate token for %%NAME%%?');">Regenerate</a></td>
+				<td><a href="%%SERVERURL%%/?task=devices&delete=%%DID%%" onclick="return confirm('Delete device %%NAME%%?');">Delete</a></td>
+			</tr>
+		<!--MULTIPLE-Devices-END-->
+	</table>
+	<p>
+		Deleting a device does not delete the data of this device. Only the access to the api will be blocked.<br>
+		
+	</p>
+		
+<h3>Add new device</h3>
+<form action="%%SERVERURL%%/?task=devices" method="post">
+	<table>
+		<tr>
+			<td>Devicename</td>
+			<td><input type="text" placeholder="Name" name="device"></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="submit" value="Create"></td>
+		</tr>
+	</table>	
+</form>
+
+<h3>Available data in storage</h3>
+<p>
+	This list shows all devices (technically their data) available in the storage and accessible via API.
+</p>
+<ul>
+	<!--MULTIPLE-Data-BEGIN-->
+		<li><code>%%NAME%%</code></li>
+	<!--MULTIPLE-Data-END-->
+</ul>
