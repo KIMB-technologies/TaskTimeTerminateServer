@@ -22,7 +22,7 @@ class WebGUI {
 			ParamParser::TASK_HOME => 'Home',
 			ParamParser::TASK_ACCOUNT => 'Account Management',
 			ParamParser::TASK_DEVICES => 'Device Management',
-			ParamParser::TASK_RECORD => 'Add Task',
+			ParamParser::TASK_RECORD => 'Server Task',
 			ParamParser::TASK_STATS => 'Statistics'
 		);
 
@@ -222,7 +222,7 @@ class WebGUI {
 	}
 
 	public function addTaskRecord() : void {
-		$this->mainTemp->setContent('TITLE', 'Add & Edit Tasks');
+		$this->mainTemp->setContent('TITLE', 'Server Task');
 		$edit = new Template('edit');
 		$this->mainTemp->includeTemplate($edit);
 

@@ -112,13 +112,13 @@ abstract class API {
 		}
 	}
 
-	public static function getStorageDir(string $group, string $device = '') : string {
+	public static function getStorageDir(string $group, string $device = '', bool $reader = false) : string {
 		if( self::checkByRegEx($group, self::GROUP_NAME_PREG) ){
 			if( !empty($device) && self::checkByRegEx($device, self::CLIENT_NAME_PREG) ){
-				return __DIR__ . '/../../data/' . $group .  '/' . $device . '/';
+				return ($reader ? '' : __DIR__ . '/../../data/' ) . $group .  '/' . $device . '/';
 			}
 			else if( empty($device) ){
-				return __DIR__ . '/../../data/' . $group . '/';
+				return ($reader ? '' : __DIR__ . '/../../data/' ) . $group . '/';
 			}
 		}
 	}

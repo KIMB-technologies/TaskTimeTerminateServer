@@ -5,8 +5,8 @@ if( php_sapi_name() !== 'cli' ){
 
 $uri = "http://localhost:8080/";
 $groupId = "admin";
-$token = "qqK1NKpE7oIkvqEwxlorznUN2bWyYyivBvT1G5s5NToPJs5Whd"; //"YvCSpXLZxpT0RPLI4yg6JIhSBKwILJ1vFqNILvf6luji7JrtUS";
-$thisClientName = "huii"; //"test";
+$token = "YvCSpXLZxpT0RPLI4yg6JIhSBKwILJ1vFqNILvf6luji7JrtUS";
+$thisClientName = "test";
 
 function postToServer(string $endpoint, array $data = array() ) : array {
 	global $uri, $groupId, $token, $thisClientName;

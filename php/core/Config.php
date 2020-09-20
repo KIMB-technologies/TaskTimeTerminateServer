@@ -25,6 +25,10 @@ class Config {
 		}
 	}
 
+	public static function getTimezone() : DateTimeZone {
+		return new DateTimeZone( empty($_ENV['CONF_TIMEZONE']) ? self::DEFAULT_TIMEZONE : $_ENV['CONF_TIMEZONE'] );
+	}
+
 	// without / at the end!
 	public static function getBaseUrl() : string {
 		$d = empty($_ENV['CONF_DOMAIN']) ? self::DEFAULT_DOMAIN : $_ENV['CONF_DOMAIN'];

@@ -2,13 +2,22 @@
 	"%%NOTEDISABLE%%" : "disable",
 	"%%NOTEMSG%%" : "",
 	"multiples" : {
-		"Data" : {
-			"%%NAME%%" : "Name"
+		"Days" : {
+			"%%DAY%%" : "2020-04-03"
+		},
+		"Day" : {
+			"%%CAT%%" : "",
+			"%%NAME%%" : "",
+			"%%BEGIN%%" : "",
+			"%%END%%" : "",
+			"%%ID%%" : ""
 		}
 	},
 	"%%YEAR%%" : "",
 	"%%MON%%" : "",
 	"%%DAY%%" : "",
 	"%%HOUR%%" : "",
-	"%%MIN%%" : ""
+	"%%MIN%%" : "",
+	"%%DAYDISABLED%%" : "disable",
+	"%%SELCTEDDAY%%" : ""
 }

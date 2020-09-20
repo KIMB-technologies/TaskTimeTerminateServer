@@ -32,6 +32,7 @@ spl_autoload_register(function ($class) {
 });
 
 // Inits
+new Config();
 Reader::changePath(realpath(__DIR__ . '/../data/'));
 if( TaskTimeTerminate === 'GUI' ){
 	session_name( 'TaskTimeTerminate' );
