@@ -11,25 +11,34 @@
  */
 defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
 
-class APIAdd extends API {
+class APIList extends API {
 
 	protected function handleAPITask() : void{
-		$this->login;
-	 
-		// $this->error('Message');
-		$this->output = array(
-			array(
-				'file' => '2020-03-12.json',
-				'timestamp' => strtotime('2020-03-12'),
-				'device' => 'Test'
-			),
-			array(
-				'file' => '2020-03-22.json',
-				'timestamp' => strtotime('2020-03-22'),
-				'device' => 'Test'
-			)
-		);
-	}
+		$groupDir = __DIR__ . '/../../data/' . $this->login->getGroup() . '/';
 
+		$files = array();
+		foreach(array_diff(scandir($groupDir), ['.','..']) as $dir ){
+			if( $dir !== $this->login->getDeviceName() && is_dir($groupDir . '/' . $dir) ){
+				$files = array_merge(
+					$files,
+					array_map( function ($f) use (&$dir) {
+							return array(
+								'timestamp' => strtotime(substr($f, 0, -5)),
+	 							'file' => $f, 
+	 							'device' => $dir
+							);
+						},
+						array_filter(
+							scandir( $groupDir . '/' . $dir ),
+							function ($f) {
+								return preg_match(parent::FILENAME_PREG, $f) === 1;
+							}
+						)
+					)
+				);
+			}
+		}
+		$this->output = $files;
+	}
 }
 ?>

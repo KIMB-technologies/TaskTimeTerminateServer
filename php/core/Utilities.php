@@ -71,6 +71,22 @@ class Utilities {
 		}
 		return $r;
 	}
+
+	public static function deleteDirRecursive(string $dir) : bool {
+		$ok = true;
+		$files = scandir($dir);
+		foreach ($files as $file) {
+			if($file !== '.' && $file !== '..'){
+				if(is_dir($dir.'/'.$file)){
+					$ok &= self::deleteDirRecursive($dir.'/'.$file);
+				}
+				else{
+					$ok &= unlink($dir.'/'.$file);
+				}
+			}
+		}
+		return $ok && rmdir($dir);
+	}
 }
 
 ?>

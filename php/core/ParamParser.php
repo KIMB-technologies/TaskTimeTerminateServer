@@ -40,6 +40,11 @@ class ParamParser {
 			!empty($_POST['group']) && !empty($_POST['password']); 
 	}
 
+	public function isLogoutGet() : bool {
+		return $_SERVER['REQUEST_METHOD'] === 'GET' &&
+			isset($_GET['logout']);
+	}
+
 	public function loginPost(string $name) : string {
 		if( $name === 'group' ){
 			return !empty($_POST['group']) ? preg_replace('/[^A-Za-z0-9]/', '', $_POST['group']) : '';
@@ -57,6 +62,10 @@ class ParamParser {
 
 	public function getTask() : int {
 		return $this->task;
+	}
+
+	public function getTasksList() : array {
+		return $this->taskIDList;
 	}
 }
 ?>

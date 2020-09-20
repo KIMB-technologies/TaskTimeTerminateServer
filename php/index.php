@@ -18,6 +18,9 @@ $login = new Login();
 if( !$login->isLoggedIn() && $param->isLoginPost() ){
 	$login->userLogin($param->loginPost('group'), $param->loginPost('password'));
 }
+if($login->isLoggedIn() && $param->isLogoutGet()){
+	$login->logUserOut();
+}
 $gui = new WebGUI($param, $login);
 
 if( $login->isLoggedIn() ){

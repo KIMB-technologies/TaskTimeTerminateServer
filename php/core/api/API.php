@@ -19,7 +19,7 @@ abstract class API {
 	const GROUP_NAME_PREG = '/^[A-Za-z0-9]+$/';
 	const TOKEN_VALUE_PREG = self::GROUP_NAME_PREG;
 
-	protected array $output = array();
+	protected ?array $output = null;
 	protected Login $login;
 	protected array $requestData = array();
 
@@ -33,7 +33,7 @@ abstract class API {
 	}
 
 	public function request(array $post) : void {
-		$this->validatePost();
+		$this->validatePost($post);
 		if( !$this->hasError ){
 			$this->login = new Login($post['group'], $post['client'], $post['token']);
 			if( $this->login->isLoggedIn()){
@@ -90,7 +90,7 @@ abstract class API {
 	}
 
 	public function __destruct(){
-		if( empty($this->output) || $this->hasError === true ){
+		if( is_null($this->output) || $this->hasError === true ){
 			http_response_code(400);
 			$this->output = array('error' => $this->errorMsg );
 		}
@@ -100,6 +100,16 @@ abstract class API {
 
 	private function checkByRegEx( string $s, string $reg ) : bool {
 		return !empty($s) && preg_match($reg, $s) === 1;
+	}
+
+	public static function deleteGroupDir(string $group) : bool {
+		$groupDir = __DIR__ . '/../../data/' . $group . '/';
+		if( is_dir($groupDir) ){
+			return Utilities::deleteDirRecursive($groupDir);
+		}
+		else{
+			return true;
+		}
 	}
 }
 ?>

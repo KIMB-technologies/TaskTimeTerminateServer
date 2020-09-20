@@ -1,0 +1,13 @@
+{
+	"%%NOTADMIN%%" : "disable",
+	"%%ISADMIN%%" : "disable",
+	"%%NOTEDISABLE%%" : "disable",
+	"%%NOTEMSG%%" : "",
+	"multiples" : {
+		"Accounts" : {
+			"%%ANAME%%" : "Account",
+			"%%AADMIN%%" : "No",
+			"%%AID%%" : "-1"
+		}
+	}
+}

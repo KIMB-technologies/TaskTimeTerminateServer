@@ -1,0 +1,73 @@
+<div class="note %%NOTEDISABLE%%" >
+%%NOTEMSG%%
+</div>
+
+<h3>Change Password</h3>
+<form action="%%SERVERURL%%/?task=account" method="post">
+	<input type="hidden" value="change" name="type">
+	<table>
+		<tr>
+			<td>Password</td>
+			<td><input type="password" placeholder="Password" name="password"></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="submit" value="Change"></td>
+		</tr>
+	</table>	
+</form>
+
+<h3>Administration</h3>
+<div class="%%NOTADMIN%%">
+	This account is not an administration account.
+</div>
+<div class="%%ISADMIN%%">
+	<h4>Other accounts</h4>
+		<table class="accounttable">
+			<tr>
+				<th>Account</th>
+				<th>Admin</th>
+				<th>Change password</th>
+				<th>Delete</th>
+			</tr>
+			<!--MULTIPLE-Accounts-BEGIN-->
+				<tr>
+					<td><code>%%ANAME%%</code></td>
+					<td>%%AADMIN%%</td>
+					<td>
+						<form action="%%SERVERURL%%/?task=account" method="post">
+						<input type="hidden" value="edit" name="type">
+						<input type="hidden" value="%%AID%%" name="group">
+						<input type="password" placeholder="New password" name="password">
+						<input type="submit" value="Change password">
+						</form>
+					</td>
+					<td><a href="%%SERVERURL%%/?task=account&delete=%%AID%%" onclick="return confirm('Delete Account %%ANAME%%?');">Delete</a></td>
+				</tr>
+			<!--MULTIPLE-Accounts-END-->
+		</table>
+		
+	<h4>Add new account</h4>
+	<form action="%%SERVERURL%%/?task=account" method="post">
+		<input type="hidden" value="new" name="type">
+		<table>
+			<tr>
+				<td>Name</td>
+				<td><input type="text" placeholder="Account" name="group"></td>
+			</tr>
+			<tr>
+				<td>Password</td>
+				<td><input type="password" placeholder="Password" name="password"></td>
+			</tr>
+			<tr>
+				<td>Admin?</td>
+				<td><input type="radio" name="admin" value="yes"> Yes <input type="radio" name="admin" value="no" checked="checked"> No</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><input type="submit" value="Create"></td>
+			</tr>
+		</table>	
+	</form>
+</div>
+

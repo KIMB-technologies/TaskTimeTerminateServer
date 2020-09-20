@@ -27,7 +27,7 @@ class APIAdd extends API {
 			return;
 		}
 
-		$groupDir = __DIR__ . '/../../data/' . $this->login->getGroup() . '/' . $this->device;
+		$groupDir = __DIR__ . '/../../data/' . $this->login->getGroup() . '/' . $this->login->getDeviceName();
 		if(!is_dir( $groupDir )){
 			if( !mkdir( $groupDir, 0740, true ) ){
 				$this->error('Unable to create storage dir.');

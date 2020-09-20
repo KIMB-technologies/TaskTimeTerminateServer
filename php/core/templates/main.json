@@ -1,5 +1,8 @@
 {
 	"%%MOREHEADER%%" : "",
 	"%%TITLE%%": "",
-	"%%INNERCONTAINER%%" : ""
+	"%%INNERCONTAINER%%" : "",
+	"%%DISPLAYLOGOUTBOX%%" : "disable",
+	"%%GROUP%%" : "",
+	"%%HOMELINK%%" : "<a href=\"%%SERVERURL%%\/\">&larr; Home</a><br/>"
 }

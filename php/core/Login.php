@@ -19,7 +19,7 @@ class Login {
 
 	private JSONReader $groupList;
 
-	public function __construct( string $group, string $client, string $token ) {
+	public function __construct( string $group = '', string $client = '', string $token = '' ) {
 		$this->groupList = new JSONReader('groups');
 		if(!empty($group) && !empty($client) && !empty($token)){
 			$this->apiClientLogin($group, $client, $token);
@@ -40,8 +40,7 @@ class Login {
 				}
 			}
 		}
-		$this->loggedIn = false;
-		$_SESSION['login'] = false;
+		$this->logUserOut();
 	}
 
 	private function userSessionLogin() : void {
@@ -52,7 +51,7 @@ class Login {
 			$this->group = $_SESSION['group'];
 		}
 		else{
-			$_SESSION['login'] = false;
+			$this->logUserOut();
 		}
 	}
 
@@ -63,21 +62,37 @@ class Login {
 				return;
 			}
 		}
-		$_SESSION['login_time'] = 0;
-		$_SESSION['login'] = false;
+		$this->logUserOut();
 	}
 
 	private function logUserIn(string $group, string $device = "") : void {
 		$this->loggedIn = true;
 		$this->group = $group;
 		$this->device = $device;
-		$_SESSION['login_time'] = time();
-		$_SESSION['login'] = true;
-		$_SESSION['group'] = $group;
+		if( session_status() === PHP_SESSION_ACTIVE ){
+			$_SESSION['login_time'] = time();
+			$_SESSION['login'] = true;
+			$_SESSION['group'] = $group;
+		}
+	}
+
+	public function logUserOut(){
+		$this->loggedIn = false;
+		$this->group = "";
+		$this->device = "";
+		if( session_status() === PHP_SESSION_ACTIVE ){
+			$_SESSION['login_time'] = time();
+			$_SESSION['login'] = false;
+			$_SESSION['group'] = "";
+		}
 	}
 
 	public function isLoggedIn() : bool {
 		return $this->loggedIn;
+	}
+
+	public function getGroupList() : JSONReader {
+		return $this->groupList;
 	}
 
 	public function getGroup() : string {
@@ -86,6 +101,10 @@ class Login {
 
 	public function getDeviceName() : string {
 		return $this->isLoggedIn() ? $this->device : "";
+	}
+
+	public function isAdmin(){
+		return $this->groupList->getValue([$this->group, "admin"]);
 	}
 
 	private static function checkHashedPassword(string $pwInput, string $pwDB) : bool {
@@ -98,6 +117,23 @@ class Login {
 			$salt = Utilities::randomCode(50, Utilities::ID);
 		}
 		return 'sha512-salt-prefix+' . hash('sha512', $salt . $pwInput ) . '+' . $salt;
+	}
+
+	/**
+	 * Creates new group if group not exists, else resets only password.
+	 */
+	public static function createNewGroup(JSONReader $groups, string $group, string $password, bool $admin = false ) : bool {
+		if($groups->isValue([$group])){
+			$groups->setValue([$group, "admin"], $admin);
+			return $groups->setValue([$group, "passhash"], self::genHashedPassword($password));
+		}
+		else{
+			return $groups->setValue([$group], array(
+				"passhash"  => self::genHashedPassword($password),
+				"admin" => $admin,
+				"devices" => array()
+			));
+		}
 	}
 }
 ?>

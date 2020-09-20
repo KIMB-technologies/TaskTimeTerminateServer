@@ -19,7 +19,7 @@ class InputParser {
 
 	private const NAME_INPUT_PREG = '/^[A-Za-z0-9\_\-]+$/';
 
-	private const DEVICE_NAME_PREG = '/^[A-Za-z0-9\-]+$/';
+	const DEVICE_NAME_PREG = '/^[A-Za-z0-9\-]+$/';
 
 	public static function checkTimeInput(string $t) : bool {
 		return !empty($t) && preg_match( self::TIME_INPUT_PREG, $t) === 1;
