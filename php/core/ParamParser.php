@@ -47,7 +47,7 @@ class ParamParser {
 
 	public function loginPost(string $name) : string {
 		if( $name === 'group' ){
-			return !empty($_POST['group']) ? preg_replace('/[^A-Za-z0-9]/', '', $_POST['group']) : '';
+			return !empty($_POST['group']) && is_string($_POST['group']) ? preg_replace('/[^A-Za-z0-9]/', '', $_POST['group']) : '';
 		}
 		else if($name === 'password' ){
 			if( !empty($_POST['password']) && is_string($_POST['password']) ) {

@@ -108,7 +108,7 @@ class WebGUI {
 					}
 				}
 			}
-			else if(!empty($_GET['delete'])){
+			else if(!empty($_GET['delete']) && is_string($_GET['delete'])){
 				$account->setContent('NOTEDISABLE','');
 				$g = preg_replace('/[^A-Za-z0-9]/', '', $_GET['delete']);
 				if(!$this->login->getGroupList()->isValue([$g]) || $g === $this->login->getGroup() ){
