@@ -25,7 +25,8 @@ input[type=text]{
 div#main{
 	border: 1px solid black;
 	margin:auto;
-	max-width: 800px;
+	min-width: 400px;
+	max-width: 1600px;
 	background-color: white;
 	padding: 5px;
 	border-radius: 4px;

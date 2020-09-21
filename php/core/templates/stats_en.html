@@ -60,11 +60,12 @@ $("select[name=time]").change(() => {
 
 <h3>Graph</h3>
 <select id="graphselect">
-	
 </select>
 <button id="displaygraph">Display Graph</button>
 
-<div id="maingraph"></div>
+<div style="width: 99%;">
+	<canvas id="maingraph"></canvas>
+</div>
 <script>
 	var combiData = %%COMBIDATA%%;
 	var graphes = %%GRAPHES%%;
@@ -74,12 +75,19 @@ $("select[name=time]").change(() => {
 	graphes.forEach( (g) => {
 		$("select#graphselect").append('<option value="'+g+'">'+g+'</option>');
 	});
+	var chart = null;
 
 	$("button#displaygraph").click( () => {
 		var url = loadUrl + $("select#graphselect").val()  + '.js';
 		$.getScript( url, () => {
 			if( typeof createGraph === "function" && combiData.length > 0 ){
-				createGraph(combiData, "div#maingraph");
+				if(chart !== null){
+					chart.destroy();
+				}
+				chart = createGraph(
+					combiData,
+					document.getElementById('maingraph').getContext('2d')
+				);
 			}
 		});
 	});

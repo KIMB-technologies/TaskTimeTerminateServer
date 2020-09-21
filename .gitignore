@@ -1,3 +1,4 @@
 /data/*.json
 /data/*/*/*.json
 *.json.lock
+.DS_Store
