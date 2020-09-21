@@ -48,9 +48,39 @@ $("select[name=time]").change(() => {
 	}
 });
 </script>
+<h3>Tables</h3>
+<p><code>%%CMD%%</code></p>
+
+<div style="margin-bottom: 10px;">
+	%%TABLEA%%
+</div>
+<div>
+	%%TABLEB%%
+</div>
 
 <h3>Graph</h3>
+<select id="graphselect">
+	
+</select>
+<button id="displaygraph">Display Graph</button>
 
-<pre>
-	%%GRAPH%%
-</pre>
+<div id="maingraph"></div>
+<script>
+	var combiData = %%COMBIDATA%%;
+	var graphes = %%GRAPHES%%;
+	var loadUrl = "%%SERVERURL%%/load/graphs/";
+	
+	$.ajaxSetup({cache: true});
+	graphes.forEach( (g) => {
+		$("select#graphselect").append('<option value="'+g+'">'+g+'</option>');
+	});
+
+	$("button#displaygraph").click( () => {
+		var url = loadUrl + $("select#graphselect").val()  + '.js';
+		$.getScript( url, () => {
+			if( typeof createGraph === "function" && combiData.length > 0 ){
+				createGraph(combiData, "div#maingraph");
+			}
+		});
+	});
+</script>

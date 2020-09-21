@@ -26,10 +26,50 @@ class Stats {
 			$cmd = $this->paramsToCmd();
 			if( !empty($cmd)){
 				$data = new TTTStats($cmd, API::getStorageDir($this->login->getGroup()));
-
-				$this->temp->setContent('GRAPH', PHP_EOL .  print_r($data->getAllResults(), true));
+				$this->displayContent($data->getAllResults());
 			}
 		}
+	}
+
+	private function displayContent(array $data) : void {
+		$this->temp->setContent('COMBIDATA', json_encode($data['combi']));
+		$this->temp->setContent('TABLEA', $this->arrayToTable($data['main']));
+		if(isset($data['today'])){
+			$this->temp->setContent('TABLEB', $this->arrayToTable($data['today']) );
+		}
+	} 
+
+	private function arrayToTable(array $data) : string {
+		$table = "<table class=\"accounttable\">";
+		$head = false;
+		$lastCat = '';
+		foreach($data as $row){
+			if(!$head){
+				$table .= "<tr>";
+				foreach($row as $col => $val){
+					$table .= "<th>". $col ."</th>";
+				}
+				$table .= "</tr>";
+				$head = true;
+			}
+			$table .= "<tr>";
+			foreach($row as $key => $val){
+				if($key === 'Category'){
+					if( $val === $lastCat ){
+						$table .= "<td></td>";
+					}
+					else{
+						$table .= "<td>". $val ."</td>";
+					}
+					$lastCat = $val;
+				}
+				else{
+					$table .= "<td>". $val ."</td>";
+				}
+			}
+			$table .= "</tr>";
+		}
+		return $table . "</table>";
 	}
 
 	private function paramsToCmd() : array {
@@ -51,6 +91,12 @@ class Stats {
 				preg_match( TTTStatsData::DATE_PREG, $_POST["range-from"]) === 1 && preg_match( TTTStatsData::DATE_PREG, $_POST["range-to"]) === 1
 			){
 				$cmd[] = $_POST["range-from"];
+				$cmd[] = $_POST["range-to"];
+			}
+			else if( isset($_POST["range-from"]) && preg_match( TTTStatsData::DATE_PREG, $_POST["range-from"]) === 1 ){
+				$cmd[] = $_POST["range-from"];
+			}
+			else if( isset($_POST["range-to"]) && preg_match( TTTStatsData::DATE_PREG, $_POST["range-to"]) === 1){
 				$cmd[] = $_POST["range-to"];
 			}
 			else{
@@ -85,6 +131,7 @@ class Stats {
 			return array();
 		}
 		else{
+			$this->temp->setContent('CMD', 'ttt s ' . implode(' ', $cmd));
 			return $cmd;
 		}
 	}
@@ -104,6 +151,20 @@ class Stats {
 			}
 			$this->temp->setMultipleContent('Devices', $ds);
 		}
+
+		$this->temp->setContent('GRAPHES', json_encode(
+			array_values(array_map(
+				function ($s) {
+					return substr($s, 0, -3);
+				},
+				array_filter(
+					scandir(__DIR__ . '/../load/graphs/'),
+					function ($s) {
+						return strlen($s) > 4 && substr($s, -3) === '.js';
+					}
+				)
+			))
+		));
 	}
 
 }

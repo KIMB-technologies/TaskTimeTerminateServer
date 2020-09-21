@@ -8,5 +8,9 @@
 			"%%NAME%%" : ""
 		}
 	},
-	"%%GRAPH%%" : ""
+	"%%TABLEA%%" : "",
+	"%%TABLEB%%" : "",
+	"%%COMBIDATA%%" : "[]",
+	"%%CMD%%" : "",
+	"%%GRAPHES%%" : ""
 }
