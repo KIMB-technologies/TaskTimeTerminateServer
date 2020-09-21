@@ -16,8 +16,6 @@ defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
  */
 class Utilities {
 
-	const VERSION = 'v0.0.0a';
-
 	/**
 	 * Possible chars for:
 	 */

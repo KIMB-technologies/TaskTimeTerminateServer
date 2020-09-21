@@ -20,7 +20,7 @@ class AddEdit {
 	public function __construct( Template $temp, Login $login ) {
 		$this->login = $login;
 		$this->temp = $temp;
-		$this->serverDir = API::getStorageDir($this->login->getGroup(), 'server');
+		$this->serverDir = API::getStorageDir($this->login->getGroup(), 'Server');
 
 		if( $_SERVER['REQUEST_METHOD'] === 'POST' ){
 			$this->addNew();
@@ -38,7 +38,7 @@ class AddEdit {
 			$this->temp->setContent('NOTEMSG','Invalid format for day!');
 			return;
 		}
-		$r = new JSONReader(API::getStorageDir($this->login->getGroup(), 'server', true) . substr($file, 0, -5));
+		$r = new JSONReader(API::getStorageDir($this->login->getGroup(), 'Server', true) . substr($file, 0, -5));
 
 		// delete one?
 		if( isset( $_GET['delete'] ) && is_numeric($_GET['delete']) ){
@@ -65,7 +65,7 @@ class AddEdit {
 
 		if(empty($r->getArray())){
 			$r->__destruct();
-			JSONReader::deleteFile(API::getStorageDir($this->login->getGroup(), 'server', true) . substr($file, 0, -5));
+			JSONReader::deleteFile(API::getStorageDir($this->login->getGroup(), 'Server', true) . substr($file, 0, -5));
 		}
 	}
 
@@ -104,7 +104,7 @@ class AddEdit {
 				);
 
 				if($this->initDir()){
-					$r = new JSONReader(API::getStorageDir($this->login->getGroup(), 'server', true) . date('Y-m-d', $begin));
+					$r = new JSONReader(API::getStorageDir($this->login->getGroup(), 'Server', true) . date('Y-m-d', $begin));
 					if($r->setValue([null], $task)){
 						$this->temp->setContent('NOTEMSG','Added task.');
 						return;

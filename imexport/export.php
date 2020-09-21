@@ -8,10 +8,10 @@ require_once(__DIR__ . '/api.php');
  * LOGIN
  */
 $client = new APIClient(
-	"http://localhost:8080/",
-	"admin",
-	"test",
-	"YvCSpXLZxpT0RPLI4yg6JIhSBKwILJ1vFqNILvf6luji7JrtUS"
+	"http://localhost:8080/", // Server URL
+	"admin", // Account/ Group Name
+	"test", // Device Name
+	"YvCSpXLZxpT0RPLI4yg6JIhSBKwILJ1vFqNILvf6luji7JrtUS" // Device Token
 );
 /**
  * SETTINGS

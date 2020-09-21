@@ -8,7 +8,7 @@ require_once(__DIR__ . '/api.php');
  * LOGIN
  */
 $client = new APIClient(
-	"http://localhost:8080/", // ADD API URL
+	"http://localhost:8080/", // Server URL
 	"admin", // API Username/ Group
 	"test", // API Device name
 	"9iTOiAj0nMnN0yxZvYf2bnt9vSlCPKKBb7U0f8chkcLnVCQPe3" // Token for device
