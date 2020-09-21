@@ -9,8 +9,9 @@
 	- Show charts made with ChartJS 
 - Account Management
 	- Each user gets an account, also called group
-	- This account can have
+	- This account can have multiple devices
 - Device Management
+	- Add, edit and delete devices
 
 ## Install on server
 This is a docker project, so it you will need docker to run it.
@@ -68,3 +69,32 @@ One may use any device of an account.
 3. One may change the `$destPath`, it has to be any empty directory (or it will be created). 
 4. Run `php ./imexport/export.php`
 5. The data for all devices will show up in `$destPath`
+
+## Custom Graphs
+It is possible to create custom graph-views for the stats view.
+
+### Create your own stats function
+> See an example e.g. [PieCategory](https://github.com/KIMB-technologies/TaskTimeTerminateServer/blob/master/php/load/graphs/PieCategory.js)
+
+When the user selects a graph and clicks on *Display Graph* the corresponding JS-file is loaded and the the function `createGraph(data, canvas)`
+of this file will be executed. In a file like [PieCategory](https://github.com/KIMB-technologies/TaskTimeTerminateServer/blob/master/php/load/graphs/PieCategory.js)
+such function like `createGraph(data, canvas)` can be defined.
+
+Each function gets two parameters `data` which is an array containing objects with datasets.
+The object `canvas` is a connector to the canvas on the page, where the chart should show up.
+It can be directly used with `new Chart(canvas, chartData)`.
+
+The function *must* return the created `Chart` object, cause the stats page need access to it.
+So a typical wokflow will use `data` to generate a object `chartData` for ChartJS and 
+end with `return new Chart(canvas, chartData);`.
+
+For information how to create charts see https://www.chartjs.org/ (also jQuery is loaded in the DOM as `$`).
+
+### Upload to server
+All JS file creating charts (and containing exactly one `createGraph`) have to be placed in the folder
+`/php-code/load/graphs/` inside the docker-container. Using docker-compose one might add
+`./charts/:/php-code/load/graphs/` to the `volumes` section of the `docker-compose.yml` and 
+add all file to `./charts/`.
+
+All JS file should be named like this `<GraphName>.js`. Of course it it recommended to 
+use only `A-Za-z-9` for the `GraphName`.
