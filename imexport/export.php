@@ -4,29 +4,20 @@ if( php_sapi_name() !== 'cli' ){
 }
 require_once(__DIR__ . '/api.php');
 
-/**
- * LOGIN
- */
-$client = new APIClient(
-	"http://localhost:8080/", // Server URL
-	"admin", // Account/ Group Name
-	"test", // Device Name
-	"YvCSpXLZxpT0RPLI4yg6JIhSBKwILJ1vFqNILvf6luji7JrtUS" // Device Token
-);
-/**
- * SETTINGS
- */
+$client = createAPIReadline();
 $destPath = __DIR__ . '/exported/';
+echo PHP_EOL . 'Export will be written to "'. $destPath .'"' . PHP_EOL;
+$newPath = readline('Type other path to change or leave empty to use path above: ');
+if(!empty($newPath)){
+	$destPath = $newPath;
+}
 
-/**
- * TOOL
- */
 if(!is_dir($destPath)){
 	if(!mkdir($destPath, 0740, true)){
 		die('Error creating export path!');
 	}
 }
-foreach( $client->listFiles() as $f ){
+foreach( $client->listFiles(0, time()) as $f ){
 	$devicePath = $destPath . '/' . $f['device'] . '/';
 	if(!is_dir($devicePath)){
 		if(!mkdir($devicePath, 0740, true)){

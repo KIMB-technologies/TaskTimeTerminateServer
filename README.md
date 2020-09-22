@@ -52,23 +52,21 @@ to the server.
 
 ### Import to Server
 Create the the device for which the data should be imported and 
-remember its token. (The name of the device can only be set via the Webinterface).
+remember its token. (The name of the device can only be set once via the Webinterface).
 
-1. Open `./imexport/import.php`
-2. Fill in `Server URL, Account Name, Device Name, Device Token` between `APIClient( ... );` as stated in the file
-3. Change the `$sourcePath`, it has to be the directory containing the devices data (e.g. `2020-04-01.json`, `2020-04-03.json`, ...)
-4. Set the timezone `date_default_timezone_set( 'Europe/Berlin' );` (see https://www.php.net/manual/en/timezones.php for list of supported ones)
-4. Run `php ./imexport/import.php`
+1. Run `php ./imexport/import.php`
+2. Type credentials of device when prompted
+3. Fill in path to the directory containing the devices data (e.g. `2020-04-01.json`, `2020-04-03.json`, ...)
+4. Change the timezone, if you want (see https://www.php.net/manual/en/timezones.php for list of supported zones)
 5. The data for the device will be available in the Webinterface (and through the API).
 
 ### Export from Server
 One may use any device of an account.
 
-1. Open `./imexport/export.php`
-2. Fill in `Server URL, Account Name, Device Name, Device Token` between `APIClient( ... );` as stated in the file
-3. One may change the `$destPath`, it has to be any empty directory (or it will be created). 
-4. Run `php ./imexport/export.php`
-5. The data for all devices will show up in `$destPath`
+1. Run `php ./imexport/export.php`
+2. Type credentials of device when prompted
+3. Change the export directory if you want (it has to be any empty directory and it will be created if not exists). 
+4. The data for all devices will show up the directory
 
 ## Custom Graphs
 It is possible to create custom graph-views for the stats view.

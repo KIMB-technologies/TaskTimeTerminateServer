@@ -3,6 +3,42 @@ if( php_sapi_name() !== 'cli' ){
 	die('Commandline only!');
 }
 
+function createAPIReadline() : APIClient {
+	$check = array(
+		'URI' => fn(string $u) => @filter_var($u, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED | FILTER_FLAG_SCHEME_REQUIRED),
+		'Group/ Username' => fn(string $g) => preg_match('/^[A-Za-z0-9]+$/', $g) === 1,
+		'Device' => fn(string $n) => preg_match( '/^[A-Za-z0-9\-]+$/', $n) === 1,
+		'Device Token' => fn(string $t) => preg_match('/^[A-Za-z0-9]+$/', $t) === 1
+	);
+	$tabs = array(
+		'URI' => 3,
+		'Group/ Username' => 1,
+		'Device' => 3,
+		'Device Token' => 2
+	);
+	$data = array();
+
+	echo "Please create a Device in the Webinterface, then fill in details:" . PHP_EOL;
+	foreach($check as $name => $checker ){
+		do {
+			$input = trim(readline($name. ':' . str_repeat("\t", $tabs[$name])));
+			if(empty($input) || !$checker($input) ){
+				echo "\tError invalid format!" . PHP_EOL;
+			}
+			else{
+				$data[$name] = $input;
+			}
+		} while( empty( $data[$name] ) );
+	}
+
+	return new APIClient(
+		$data['URI'],
+		$data['Group/ Username'],
+		$data['Device'],
+		$data['Device Token']
+	);
+}
+
 class APIClient {
 
 	private string $uri;
@@ -22,7 +58,7 @@ class APIClient {
 			'http' => array(
 				'method'  => 'POST',
 				'header'  => 'Content-Type: application/x-www-form-urlencoded',
-				//'ignore_errors' => true,
+				'ignore_errors' => true,
 				'content' => http_build_query(array(
 					'group' => $this->groupId,
 					'token' => $this->token,
@@ -51,8 +87,13 @@ class APIClient {
 		return array();
 	}
 
-	public function listFiles() : array {
-		return $this->postToServer('list');
+	public function listFiles(int $timeMin, int $timeMax) : array {
+		return $this->postToServer(
+			'list',
+			array(
+				'timeMin' => $timeMin,
+				'timeMax' => $timeMax
+			));
 	}
 
 	public function getFile( string $file, string $device ) : array {
