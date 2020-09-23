@@ -1,5 +1,6 @@
 {
 	"%%NOTEDISABLE%%" : "disable",
+	"%%CMDDISABLE%%" : "disable",
 	"%%NOTEMSG%%" : "",
 	"%%TODAY%%" : "",
 	"multiples" : {
@@ -11,6 +12,8 @@
 	"%%TABLEA%%" : "",
 	"%%TABLEB%%" : "",
 	"%%COMBIDATA%%" : "[]",
+	"%%PLAINDATA%%" : "[]",
+	"%%SINGLEDAYDATA%%" : "false",
 	"%%CMD%%" : "",
 	"%%GRAPHES%%" : ""
 }

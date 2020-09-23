@@ -74,11 +74,21 @@ It is possible to create custom graph-views for the stats view.
 ### Create your own stats function
 > See an example e.g. [PieCategory](https://github.com/KIMB-technologies/TaskTimeTerminateServer/blob/master/php/load/graphs/PieCategory.js)
 
-When the user selects a graph and clicks on *Display Graph* the corresponding JS-file is loaded and the the function `createGraph(data, canvas)`
+When the user selects a graph and clicks on *Display Graph* the corresponding JS-file is loaded and the the function `createGraph(combiData, plainData, singleDayData, canvas)`
 of this file will be executed. In a file like [PieCategory](https://github.com/KIMB-technologies/TaskTimeTerminateServer/blob/master/php/load/graphs/PieCategory.js)
-such function like `createGraph(data, canvas)` can be defined.
+such function like `createGraph(combiData, plainData, singleDayData, canvas)` can be defined.
 
-Each function gets two parameters `data` which is an array containing objects with datasets.
+Each function gets four parameters, three `*Data` and one `canvas`.
+The parameter `*Data` are arrays containing objects with datasets, they all represent the same current data selection of the user, but haven different formats.
+- `combiData`
+	- `[{"category":"Test","name":"My Task","duration":3600,"times":1,"days":["23.09", ...],"devices":["Server", ...]}, ...]`
+- `plainData`
+	- This array may be very large and the system may not deliver all user selected datasets (when they become too much).
+	- `[{"name":"My Task","category":"Test","begin":1600866000,"end":1600869600,"duration":3600,"device":"Server"}, ...]`
+- `singleDayData`
+	- Will be `false` if more than one day selected by user.
+	- `[{"Begin":"15:00","Category":"Test","Name":"My Task","Time":"      1h  0m"}, ...]`
+
 The object `canvas` is a connector to the canvas on the page, where the chart should show up.
 It can be directly used with `new Chart(canvas, chartData)`.
 

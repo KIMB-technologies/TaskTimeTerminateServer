@@ -13,6 +13,9 @@ defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
 
 class Stats {
 
+	// max plain data elements for plots
+	const MAX_PLAIN_ELEMENTS = 2000;
+
 	private Template $temp;
 	private Login $login;
 
@@ -33,9 +36,11 @@ class Stats {
 
 	private function displayContent(array $data) : void {
 		$this->temp->setContent('COMBIDATA', json_encode($data['combi']));
-		$this->temp->setContent('TABLEA', $this->arrayToTable($data['main']));
+		$this->temp->setContent('PLAINDATA', json_encode(array_slice($data['plain'], 0, self::MAX_PLAIN_ELEMENTS)));
+		$this->temp->setContent('TABLEA', $this->arrayToTable($data['table']));
 		if(isset($data['today'])){
 			$this->temp->setContent('TABLEB', $this->arrayToTable($data['today']) );
+			$this->temp->setContent('SINGLEDAYDATA', json_encode($data['today']));
 		}
 	} 
 
@@ -131,6 +136,7 @@ class Stats {
 			return array();
 		}
 		else{
+			$this->temp->setContent('CMDDISABLE','');
 			$this->temp->setContent('CMD', 'ttt s ' . implode(' ', $cmd));
 			return $cmd;
 		}

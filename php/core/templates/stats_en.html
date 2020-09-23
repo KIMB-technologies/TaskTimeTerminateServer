@@ -3,71 +3,156 @@
 </div>
 
 <h3>Select data</h3>
-<form action="%%SERVERURL%%/?task=stats" method="post">
-	<p>
-		Timespan:<br>
-		<select name="time">
-			<option value="today" selected>Today</option>
-			<option value="day">Day</option>
-			<option value="week">Week</option>
-			<option value="month">Month</option>
-			<option value="range">Range</option>
-			<option value="all">All</option>
-		</select>
-		<span id="rangeblock" class="disable">
-			from <input type="text" name="range-from" id="rf" placeholder="2020-03-04" pattern="\d{4}-\d{2}-\d{2}" style="width:100px;">
-			to <input type="text" name="range-to" id="rt" placeholder="2020-03-04" value="%%TODAY%%"  pattern="\d{4}-\d{2}-\d{2}" style="width:100px;">
-		</span>
-	</p>
-	<p>
-		Filter categories:<br>
-		<input type="text" name="cats" placeholder="Hobby,Home">
-	</p>
-	<p>
-		Filter tasks:<br>
-		<input type="text" name="names" placeholder="Coding,Gaming">
-	</p>
-	<p>
-		Filter Devices:<br>
-		<select name="devices[]" multiple>
-			<!--MULTIPLE-Devices-BEGIN-->
-			<option value="%%VALUE%%" selected>%%NAME%%</option>
-			<!--MULTIPLE-Devices-END-->
-		</select>
-	</p>
-	<p><input type="submit" value="Show"></p>
-</form>
+	<form action="%%SERVERURL%%/?task=stats" method="post">
+		<div class="form-group row">
+			<label for="time" class="col-sm-2 col-form-label">Timespan</label>
+			<div class="col-sm-10">
+				<select name="time" id="time" class="custom-select">
+					<option value="today" selected>Today</option>
+					<option value="day">Day</option>
+					<option value="week">Week</option>
+					<option value="month">Month</option>
+					<option value="range">Range</option>
+					<option value="all">All</option>
+				</select>
+			</div>
+		</div>
+		<div id="rangeblock" class="disable">
+			<div class="form-group row">
+				<div class="col-sm-2">&nbsp;</div>
+				<label for="rf" class="col-sm-2 col-form-label">from</label>
+				<div class="col-sm-6">
+					<input type="text" name="range-from" id="rf" placeholder="2020-03-04" pattern="\d{4}-\d{2}-\d{2}"  class="form-control">
+				</div>
+				<div class="col-sm-2">
+					<button type="button" class="btn btn-light" id="fromDialog">&#x1F4C5;</button>
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-sm-2">&nbsp;</div>
+				<label for="rf"class="col-sm-2 col-form-label">to</label>
+				<div class="col-sm-6">
+					<input type="text" name="range-to" id="rt" placeholder="2020-03-04" value="%%TODAY%%"  pattern="\d{4}-\d{2}-\d{2}"  class="form-control">
+				</div>
+				<div class="col-sm-2">
+					<button type="button" class="btn btn-light" id="toDialog">&#x1F4C5;</button>
+				</div>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="cats" class="col-sm-2 col-form-label">Filter categories</label>
+			<div class="col-sm-10">
+				<input type="text" placeholder="Hobby,Home" name="cats" id="cats" class="form-control">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="names" class="col-sm-2 col-form-label">Filter tasks</label>
+			<div class="col-sm-10">
+				<input type="text" placeholder="Coding,Gaming" name="names" id="names" class="form-control">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="devices" class="col-sm-2 col-form-label">Filter Devices</label>
+			<div class="col-sm-10">
+				<select name="devices[]" id="devices" class="custom-select" size=4 multiple>
+					<!--MULTIPLE-Devices-BEGIN-->
+						<option value="%%VALUE%%" selected>%%NAME%%</option>
+					<!--MULTIPLE-Devices-END-->
+				</select>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-sm-2">&nbsp;</div>
+			<div class="col-sm-10">
+				<input type="submit" value="Show" class="btn btn-secondary">
+			</div>
+		</div>
+	</form>
+	<input type="hidden" id="datepickerFrom">
+	<input type="hidden" id="datepickerTo">
 
 <script>
 $("select[name=time]").change(() => {
 	if($("select[name=time]").val() == "range" ){
-		$("span#rangeblock").removeClass("disable");
+		$("div#rangeblock").removeClass("disable");
 	}
 	else {
-		$("span#rangeblock").addClass("disable");
+		$("div#rangeblock").addClass("disable");
 	}
 });
+if(localStorage.hasOwnProperty( 'lastServerStats' )){
+	var values = JSON.parse( localStorage.getItem( 'lastServerStats' ) );
+	$.each(values, (k,v) => {
+		$(v.tag + '[name="'+ k +'"]').val(v.value);
+	});
+	$("select[name=time]").trigger('change');
+}
+$("form").on("submit", () => {
+	var values = {};
+	$("input, select").each((k,v) => {
+		values[$(v).attr("name")] = { 
+			value : $(v).val(),
+			tag : $(v).prop("tagName")
+		};
+	});
+	localStorage.setItem( 'lastServerStats', JSON.stringify(values));
+});
+function dateDialog(element, destination){
+	var pos = $(destination).offset();
+	$( element ).datepicker(
+		"dialog",
+		$(destination).val(),
+		function(v,o) {
+			var m = o.selectedMonth+1;
+			var d = o.selectedDay;
+			$(destination).val(o.selectedYear +'-'+ (m <= 9 ? '0' : '') + m + '-' + (d <= 9 ? '0' : '') + d);
+		},
+		{
+			dateFormat : "yy-mm-dd"
+		},
+		[pos.left, pos.top]
+	);
+}
+$("#fromDialog").click( (e) => {
+	e.preventDefault();
+	dateDialog("input#datepickerFrom",  "input[name=range-from]");
+});
+$("#toDialog").click( (e) => {
+	e.preventDefault();
+	dateDialog("input#datepickerTo",  "input[name=range-to]");
+});
 </script>
-<h3>Tables</h3>
-<p><code>%%CMD%%</code></p>
 
-<div style="margin-bottom: 10px;">
-	%%TABLEA%%
-</div>
-<div>
-	%%TABLEB%%
-</div>
+<h3>Tables</h3>
+	<div class="alert alert-info %%CMDDISABLE%%" role="alert">
+		<h5 class="alert-heading">Client Command</h5>
+		<p><code>%%CMD%%</code></p>
+	</div>
+
+	<div style="margin-bottom: 10px;">
+		%%TABLEA%%
+	</div>
+	<div>
+		%%TABLEB%%
+	</div>
 
 <h3>Graph</h3>
-<select id="graphselect">
-</select>
-<button id="displaygraph">Display Graph</button>
+	<div class="form-inline">
+		<div class="input-group">
+			<select id="graphselect" class="custom-select" name="graph">
+			</select>
+		</div> &nbsp;
+		<button id="displaygraph" class="btn btn-secondary">Display Graph</button>
+	</div>
 
-<div style="width: 99%;">
-	<canvas id="maingraph"></canvas>
-</div>
+
+	<div style="width: 99%;">
+		<canvas id="maingraph"></canvas>
+	</div>
 <script>
 	var combiData = %%COMBIDATA%%;
+	var plainData = %%PLAINDATA%%;
+	var singleDayData = %%SINGLEDAYDATA%%;
 	var graphes = %%GRAPHES%%;
 	var loadUrl = "%%SERVERURL%%/load/graphs/";
 	
@@ -78,14 +163,16 @@ $("select[name=time]").change(() => {
 	var chart = null;
 
 	$("button#displaygraph").click( () => {
-		var url = loadUrl + $("select#graphselect").val()  + '.js';
+		var url = loadUrl + $("select#graphselect").val()  + '.js?%%VERSIONSEED%%';
 		$.getScript( url, () => {
-			if( typeof createGraph === "function" && combiData.length > 0 ){
+			if( typeof createGraph === "function" && ( combiData.length > 0 || plainData.length > 0 || singleDayData !== false ) ){
 				if(chart !== null){
 					chart.destroy();
 				}
 				chart = createGraph(
 					combiData,
+					plainData,
+					singleDayData,
 					document.getElementById('maingraph').getContext('2d')
 				);
 			}

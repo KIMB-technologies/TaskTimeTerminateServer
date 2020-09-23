@@ -183,7 +183,8 @@ class TTTStats {
 			$d['Time'] = TTTTime::secToTime($d['Time']);
 		}
 
-		$this->printData($table, 'main');
+		$this->printData($table, 'table');
+		$this->printData($data, 'plain');
 		$this->printData($combi, 'combi');
 		
 

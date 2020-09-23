@@ -95,7 +95,9 @@ function dateDialog(element, elements){
 			$(elements[1]).val(o.selectedMonth+1);
 			$(elements[2]).val(o.selectedDay);
 		},
-		{},
+		{
+			dateFormat : "yy-mm-dd"
+		},
 		[pos.left, pos.top]
 	);
 }
