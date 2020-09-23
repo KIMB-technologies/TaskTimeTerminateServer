@@ -1,50 +1,116 @@
-<div class="note %%NOTEDISABLE%%" >
-%%NOTEMSG%%
+<div class="alert alert-info %%NOTEDISABLE%%" role="alert">
+	%%NOTEMSG%%
 </div>
 
 <h3>Add task</h3>
-<p>Add a task to the virtual device <code>server</code>.</p>
+<p>Add a task to the virtual device <code>Server</code>.</p>
 <form action="%%SERVERURL%%/?task=record" method="post">
-	<table>
-		<tr>
-			<td>Category</td>
-			<td><input type="text" placeholder="Category" name="category"></td>
-		</tr>
-		<tr>
-			<td>Task</td>
-			<td><input type="text" placeholder="Task" name="task"></td>
-		</tr>
-		<tr>
-			<td>Begin</td>
-			<td>
-				<input type="number" placeholder="YYYY" name="begin_Y" size=4 max=3000 min=1970 value="%%YEAR%%">
-				<input type="number" placeholder="mm" name="begin_m" size=2 max=12 min=1 value="%%MON%%">
-				<input type="number" placeholder="dd" name="begin_d" size=2 max=31 min=1 value="%%DAY%%">
-				&nbsp;&nbsp; &nbsp;&nbsp;
-				<input type="number" placeholder="hh" name="begin_H" size=2 max=23 min=0 value="%%HOUR%%">
-				<input type="number" placeholder="mm" name="begin_i" size=2 max=59 min=0 value="%%MIN%%">
-			</td>
-		</tr>
-		<tr>
-			<td>End</td>
-			<td>
-				<input type="number" placeholder="YYYY" name="end_Y" size=4 max=3000 min=1970 value="%%YEAR%%">
-				<input type="number" placeholder="mm" name="end_m" size=2 max=12 min=1 value="%%MON%%">
-				<input type="number" placeholder="dd" name="end_d" size=2 max=31 min=1 value="%%DAY%%">
-				&nbsp;&nbsp; &nbsp;&nbsp;
-				<input type="number" placeholder="hh" name="end_H" size=2 max=23 min=0>
-				<input type="number" placeholder="mm" name="end_i" size=2 max=59 min=0>
-			</td>
-		</tr>
-		<tr>
-			<td></td>
-			<td><input type="submit" value="Add task"></td>
-		</tr>
-	</table>	
+	<div class="form-group row">
+		<label for="category" class="col-sm-2 col-form-label">Category</label>
+		<div class="col-sm-10">
+			<input type="text" placeholder="Category" name="category" id="category" class="form-control">
+		</div>
+	</div>
+	<div class="form-group row">
+		<label for="task" class="col-sm-2 col-form-label">Task</label>
+		<div class="col-sm-10">
+			<input type="text" placeholder="Task" name="task" id="task" class="form-control">
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label">
+			Begin
+		</label>
+		<div class="input-group col-sm-10">
+			<input type="number" placeholder="YYYY" name="begin_Y" size=4 max=3000 min=1970 value="%%YEAR%%" class="form-control">
+			<input type="number" placeholder="mm" name="begin_m" size=2 max=12 min=1 value="%%MON%%" class="form-control">
+			<input type="number" placeholder="dd" name="begin_d" size=2 max=31 min=1 value="%%DAY%%" class="form-control">
+			<button type="button" class="btn btn-light" id="beginDialog">&#x1F4C5;</button>
+			&nbsp;&nbsp; &nbsp;&nbsp;
+			<input type="number" placeholder="hh" name="begin_H" size=2 max=23 min=0 value="%%HOUR%%" class="form-control">
+			<input type="number" placeholder="mm" name="begin_i" size=2 max=59 min=0 value="%%MIN%%" class="form-control">
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label">
+			End
+		</label>
+		<div class="input-group col-sm-10">
+			<input type="number" placeholder="YYYY" name="end_Y" size=4 max=3000 min=1970 value="%%YEAR%%" class="form-control">
+			<input type="number" placeholder="mm" name="end_m" size=2 max=12 min=1 value="%%MON%%" class="form-control">
+			<input type="number" placeholder="dd" name="end_d" size=2 max=31 min=1 value="%%DAY%%" class="form-control">
+			<button type="button" class="btn btn-light" id="endDialog">&#x1F4C5;</button>
+			&nbsp;&nbsp; &nbsp;&nbsp;
+			<input type="number" placeholder="hh" name="end_H" size=2 max=23 min=0 class="form-control">
+			<input type="number" placeholder="mm" name="end_i" size=2 max=59 min=0 class="form-control">
+		</div>
+	</div>
+	<div class="form-group row">
+		<div class="col-sm-2">&nbsp;</div>
+		<div class="col-sm-10">
+			<input type="submit" value="Add task" class="btn btn-secondary">
+		</div>
+	</div>
 </form>
+<input type="hidden" id="datepickerBegin">
+<input type="hidden" id="datepickerEnd">
+
+<script>
+var usedTasksCategories = localStorage.hasOwnProperty( 'usedTasksCategories' ) ?
+	JSON.parse( localStorage.getItem( 'usedTasksCategories' ) ) : {
+		"categories" : [],
+		"tasks" : []
+	};
+if(sessionStorage.hasOwnProperty( 'lastServerTask' )){
+	var values = JSON.parse( sessionStorage.getItem( 'lastServerTask' ) );
+	$.each(values, (k,v) => {
+		$('input[name="'+ k +'"]').val(v);
+	});
+}
+$( "input#category" ).autocomplete({
+	source: usedTasksCategories.categories,
+	minLength: 1
+});
+$( "input#task" ).autocomplete({
+	source: usedTasksCategories.tasks,
+	minLength: 1
+});
+$("form").on("submit", () => {
+	usedTasksCategories.categories.push($( "input#category" ).val());
+	usedTasksCategories.tasks.push($( "input#task" ).val());
+	localStorage.setItem( 'usedTasksCategories', JSON.stringify(usedTasksCategories) );
+	var values = {};
+	$("input").each((k,v) => {
+		values[$(v).attr("name")] = $(v).val();
+	});
+	sessionStorage.setItem( 'lastServerTask', JSON.stringify(values));
+});
+function dateDialog(element, elements){
+	var pos = $(elements[0]).offset();
+	$( element ).datepicker(
+		"dialog",
+		$(elements[0]).val() + "-" + $(elements[1]).val() + "-" + $(elements[2]).val(),
+		function(v,o) {
+			$(elements[0]).val(o.selectedYear);
+			$(elements[1]).val(o.selectedMonth+1);
+			$(elements[2]).val(o.selectedDay);
+		},
+		{},
+		[pos.left, pos.top]
+	);
+}
+$("#beginDialog").click( (e) => {
+	e.preventDefault();
+	dateDialog("input#datepickerBegin",  ["input[name=begin_Y]", "input[name=begin_m]", "input[name=begin_d]"]);
+});
+$("#endDialog").click( (e) => {
+	e.preventDefault();
+	dateDialog("input#datepickerEnd",  ["input[name=end_Y]", "input[name=endn_m]", "input[name=end_d]"]);
+});
+</script>
 
 <h3>Delete task</h3>
-<p>Delete tasks of the virtual device <code>server</code>.</p>
+<p>Delete tasks of the virtual device <code>Server</code>.</p>
 
 <div class="%%DAYDISABLED%%">
 	<h4>Tasks <code>%%SELCTEDDAY%%</code></h4>
@@ -62,15 +128,15 @@
 				<td>%%NAME%%</td>
 				<td>%%BEGIN%%</td>
 				<td>%%END%%</td>
-				<td><a href="%%SERVERURL%%/?task=record&day=%%SELCTEDDAY%%&delete=%%ID%%" onclick="return confirm('Delete %%NAME%% starting %%BEGIN%%?');">Delete</a></td>
+				<td><a href="%%SERVERURL%%/?task=record&day=%%SELCTEDDAY%%&delete=%%ID%%" onclick="return confirm('Delete \'%%NAME%%\' starting \'%%BEGIN%%\'?');"><button type="button" class="btn btn-danger">Delete</button></a></td>
 			</tr>
 		<!--MULTIPLE-Day-END-->
 	</table>
 </div>
 
 <h4>Days</h4>
-<ul>
+<ul class="list-group">
 	<!--MULTIPLE-Days-BEGIN-->
-		<li><a href="%%SERVERURL%%/?task=record&day=%%DAY%%"><code>%%DAY%%</code></a></li>
+		<li class="list-group-item"><a href="%%SERVERURL%%/?task=record&day=%%DAY%%"><code>%%DAY%%</code></a></li>
 	<!--MULTIPLE-Days-END-->
 </ul>

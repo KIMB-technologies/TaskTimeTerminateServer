@@ -7,19 +7,16 @@ h1{
 	color:black;
 	border-bottom: 1px solid #5d7;
 	text-align:center;
-	font-size:2em;
 	font-type: bold;
 }
 h2{
 	color:black;
 	border-bottom: 1px solid #5d7;
 	text-align:left;
-	font-size:1.5em;
 	font-type: bold;
 }
-input[type=text]{
-	width:95%;
-	max-width:500px;
+h1,h2,h3,h4{
+	margin-top: 20px;
 }
 
 div#main{
@@ -69,11 +66,16 @@ div#logoutbox{
 	float: right;
 }
 
-table.accounttable{
+table.accounttable, .form-group, .list-group{
 	width: 100%;
+	min-width: 395px;
+	max-width: 800px;
 }
 table.accounttable, table.accounttable tr, table.accounttable td, table.accounttable th {
 	border: 1px solid black;
 	border-collapse: collapse;
 	padding: 2px;
+}
+table.accounttable th {
+	text-align: center;
 }

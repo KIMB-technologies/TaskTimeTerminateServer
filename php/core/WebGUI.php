@@ -129,7 +129,7 @@ class WebGUI {
 			foreach($this->login->getGroupList()->getArray() as $group => $data){
 				$gr[] = array(
 					"ANAME" => $group,
-					"AADMIN" => $data['admin'] ? 'Yes' : 'No',
+					"AADMIN" => $data['admin'] ? '<span class="badge badge-success">Yes</span>' : '<span class="badge badge-danger">No</span>',
 					"AID" => $group
 				);
 			}

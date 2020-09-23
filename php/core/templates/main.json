@@ -4,5 +4,5 @@
 	"%%INNERCONTAINER%%" : "",
 	"%%DISPLAYLOGOUTBOX%%" : "disable",
 	"%%GROUP%%" : "",
-	"%%HOMELINK%%" : "<a href=\"%%SERVERURL%%\/\">&larr; Home</a><br/>"
+	"%%HOMELINK%%" : "<a href=\"%%SERVERURL%%\/\"><button type=\"button\" class=\"btn btn-dark\">&larr; Home<\/button><\/a>"
 }

@@ -22,23 +22,24 @@
 		<link rel="icon" href="%%SERVERURL%%/favicon.ico" type="image/x-icon; charset=binary">
 		<link rel="apple-touch-icon" href="%%SERVERURL%%/load/icon.png">
 
-		<!-- <link rel="stylesheet" type="text/css" href="%%SERVERURL%%/load/jquery-ui.min.css"> -->
-		<!-- <link rel="stylesheet" type="text/css" href="%%SERVERURL%%/load/jquery-ui-light.theme.min.css"> -->
+		<link rel="stylesheet" type="text/css" href="%%SERVERURL%%/load/jquery-ui.min.css">
+		<link rel="stylesheet" type="text/css" href="%%SERVERURL%%/load/jquery-ui-light.theme.min.css">
+		<link rel="stylesheet" type="text/css" href="%%SERVERURL%%/load/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="%%SERVERURL%%/load/main.css">
 		
 		<script src="%%SERVERURL%%/load/jquery.min.js"></script>
-		<!-- <script src="%%SERVERURL%%/load/jquery-ui.min.js"></script> -->
+		<script src="%%SERVERURL%%/load/jquery-ui.min.js"></script>
 		<script src="%%SERVERURL%%/load/chart.min.js"></script>
 		%%MOREHEADER%%
 	</head>
 	<body>
 		<div id="main">
-			<h1>Task&shy;Time&shy;Terminate Sync-Server</h1>
+			<h1>Task&shy;Time&shy;Terminate Server</h1>
 			<div id="logoutbox" class="%%DISPLAYLOGOUTBOX%%">
-				Hi %%GROUP%%!<br/>
-				<a href="%%SERVERURL%%/?logout">Logout</a>
+				<p>Hi <span class="badge badge-success">%%GROUP%%</span>!</p>
+				<a href="%%SERVERURL%%/?logout" class="btn-sm btn-warning">Logout</a>
 			</div>
-			%%HOMELINK%%
+			<p>%%HOMELINK%% <button type="button" class="btn btn-light" style="visibility: hidden;">&nbsp;</button></p>
 			<h2>%%TITLE%%</h2>
 
 				%%INNERCONTAINER%%
@@ -47,7 +48,7 @@
 		<div id="footer">
 			<center>
 				<small>
-					TaskTimeTerminate Sync-Server for
+					TaskTimeTerminate Server for
 					<a href="https://github.com/KIMB-technologies/TaskTimeTerminate" target="_blank">TaskTimeTerminate by KIMB-technologies</a>
 					&ndash;
 					<a href="https://www.gnu.org/licenses/gpl-3.0.txt" target="_blank">GPLv3</a>

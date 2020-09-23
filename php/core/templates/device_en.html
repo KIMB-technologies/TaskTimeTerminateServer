@@ -1,5 +1,5 @@
-<div class="note %%NOTEDISABLE%%" >
-%%NOTEMSG%%
+<div class="alert alert-info %%NOTEDISABLE%%" role="alert">
+	%%NOTEMSG%%
 </div>
 
 <h3>Active devices</h3>
@@ -12,36 +12,37 @@
 		<!--MULTIPLE-Devices-BEGIN-->
 			<tr>
 				<td><code>%%NAME%%</code></td>
-				<td><a href="%%SERVERURL%%/?task=devices&regenerate=%%DID%%" onclick="return confirm('Regenerate token for %%NAME%%?');">Regenerate</a></td>
-				<td><a href="%%SERVERURL%%/?task=devices&delete=%%DID%%" onclick="return confirm('Delete device %%NAME%%?');">Delete</a></td>
+				<td><a href="%%SERVERURL%%/?task=devices&regenerate=%%DID%%" onclick="return confirm('Regenerate token for \'%%NAME%%\'?');"><button type="button" class="btn btn-warning">Regenerate</button></a></td>
+				<td><a href="%%SERVERURL%%/?task=devices&delete=%%DID%%" onclick="return confirm('Delete device \'%%NAME%%\'?');"><button type="button" class="btn btn-danger">Delete</button></a></td>
 			</tr>
 		<!--MULTIPLE-Devices-END-->
 	</table>
 	<p>
-		Deleting a device does not delete the data of this device. Only the access to the api will be blocked.<br>
-		
+		Deleting a device does not delete the data of this device. Only the access to the api will be blocked.
 	</p>
 		
 <h3>Add new device</h3>
 <form action="%%SERVERURL%%/?task=devices" method="post">
-	<table>
-		<tr>
-			<td>Devicename</td>
-			<td><input type="text" placeholder="Name" name="device"></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td><input type="submit" value="Create"></td>
-		</tr>
-	</table>	
+	<div class="form-group row">
+		<label for="deviceN" class="col-sm-2 col-form-label">Devicename</label>
+		<div class="col-sm-10">
+			<input type="text" placeholder="Name" name="device" id="deviceN" class="form-control">
+		</div>
+	</div>
+	<div class="form-group row">
+		<div class="col-sm-2">&nbsp;</div>
+		<div class="col-sm-10">
+			<input type="submit" value="Create" class="btn btn-secondary">
+		</div>
+	</div>
 </form>
 
 <h3>Available data in storage</h3>
 <p>
 	This list shows all devices (technically their data) available in the storage and accessible via API.
 </p>
-<ul>
+<ul class="list-group">
 	<!--MULTIPLE-Data-BEGIN-->
-		<li><code>%%NAME%%</code></li>
+		<li class="list-group-item"><code>%%NAME%%</code></li>
 	<!--MULTIPLE-Data-END-->
 </ul>
