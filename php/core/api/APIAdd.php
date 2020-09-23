@@ -21,8 +21,7 @@ class APIAdd extends API {
 				&& InputParser::checkNameInput( $a['name'] )
 				&& InputParser::checkCategoryInput( $a['category'] );
 		}));
-		if(empty($array) || !isset($this->requestData['day'])
-			|| !is_int($this->requestData['day']) || $this->requestData['day'] < 0 ){
+		if(!isset($this->requestData['day']) || !is_int($this->requestData['day']) || $this->requestData['day'] < 0 ){
 			$this->error('Invalid data.');
 			return;
 		}
@@ -36,12 +35,23 @@ class APIAdd extends API {
 		}
 		
 		$filename = $groupDir . '/' . date('Y-m-d', $this->requestData['day']) . '.json';
-		if(file_put_contents( $filename, json_encode( $array, JSON_PRETTY_PRINT ))){
-			$this->output = array( 'ok' );
+
+		if( !empty($array) ){
+			if(file_put_contents( $filename, json_encode( $array, JSON_PRETTY_PRINT ))){
+				$this->output = array( 'ok' );
+			}
+			else{
+				$this->error('Error saving data.');
+			}	
 		}
 		else{
-			$this->error('Error saving data.');
-		}	
+			if( unlink( $filename) ){
+				$this->output = array( 'ok' );
+			}
+			else{
+				$this->error('Error saving data.');
+			}	
+		}
 	}
 }
 ?>

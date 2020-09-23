@@ -23,27 +23,32 @@ if($login->isLoggedIn() && $param->isLogoutGet()){
 }
 $gui = new WebGUI($param, $login);
 
-if( $login->isLoggedIn() ){
-	switch ($param->getTask()) {
-		case ParamParser::TASK_ACCOUNT:
-			$gui->accountManage();
-			break;
-		case ParamParser::TASK_DEVICES:
-			$gui->deviceManage();
-			break;
-		case ParamParser::TASK_RECORD:
-			$gui->addTaskRecord();
-			break;
-		case ParamParser::TASK_STATS:
-			$gui->showStats();
-			break;
-		case ParamParser::TASK_HOME:
-		case ParamParser::TASK_NONE:
-		default:
-			$gui->home();
-	}
+if( isset($_GET['err']) && in_array($_GET['err'], array(404, 403)) ){
+	$gui->errorPage($_GET['err']);
 }
 else{
-	$gui->loginForm();
+	if( $login->isLoggedIn() ){
+		switch ($param->getTask()) {
+			case ParamParser::TASK_ACCOUNT:
+				$gui->accountManage();
+				break;
+			case ParamParser::TASK_DEVICES:
+				$gui->deviceManage();
+				break;
+			case ParamParser::TASK_RECORD:
+				$gui->addTaskRecord();
+				break;
+			case ParamParser::TASK_STATS:
+				$gui->showStats();
+				break;
+			case ParamParser::TASK_HOME:
+			case ParamParser::TASK_NONE:
+			default:
+				$gui->home();
+		}
+	}
+	else{
+		$gui->loginForm();
+	}
 }
 ?>

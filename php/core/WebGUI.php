@@ -255,6 +255,12 @@ class WebGUI {
 		$home->setMultipleContent('Links', $tasks);
 	}
 
+	public function errorPage(int $code) : void  {
+		$this->mainTemp->setContent('TITLE', 'Error ' . $code );
+		$error = new Template('error');
+		$this->mainTemp->includeTemplate($error);
+	}
+
 	public function loginForm() : void {
 		$this->mainTemp->setContent('TITLE', 'Login');
 		$login = new Template('login');

@@ -159,6 +159,7 @@ class Template{
 		}
 
 		$this->placeholder['%%SERVERURL%%'] = Config::getBaseUrl();
+		$this->placeholder['%%VERSIONSEED%%'] = is_file('/php-code/VERSION') ? sha1_file('/php-code/VERSION') : uniqid();
 
 		if( $this->inner !== null ){
 			$this->placeholder['%%INNERCONTAINER%%'] = $this->inner->getOutputString();
