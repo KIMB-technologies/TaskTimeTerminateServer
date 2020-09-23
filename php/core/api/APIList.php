@@ -16,27 +16,40 @@ class APIList extends API {
 	protected function handleAPITask() : void{
 		$groupDir = parent::getStorageDir($this->login->getGroup());
 
+		// send range?
+		if( isset($this->requestData['timeMin']) && isset($this->requestData['timeMax']) &&
+			is_int($this->requestData['timeMin']) && is_int($this->requestData['timeMax'])
+		){
+			$timeMin = $this->requestData['timeMin'];
+			$timeMax = $this->requestData['timeMax'];
+		}
+		if(empty($timeMin) || $timeMin < 0 ){
+			$timeMin = 0;
+		}
+		if(empty($timeMax) || $timeMax < 0 ){
+			$timeMax = time();
+		}
+
 		$files = array();
-		if( is_dir($groupDir)){
+		if( is_dir($groupDir) ){
 			foreach(array_diff(scandir($groupDir), ['.','..']) as $dir ){
 				if( $dir !== $this->login->getDeviceName() && is_dir($groupDir . '/' . $dir) ){
-					$files = array_merge(
-						$files,
-						array_map( function ($f) use (&$dir) {
-								return array(
-									'timestamp' => strtotime(substr($f, 0, -5)),
-									'file' => $f, 
-									'device' => $dir
-								);
-							},
-							array_filter(
-								scandir( $groupDir . '/' . $dir ),
-								function ($f) {
-									return preg_match(parent::FILENAME_PREG, $f) === 1;
-								}
-							)
-						)
-					);
+					$fi = array_filter(
+							scandir( $groupDir . '/' . $dir ),
+							function ($f) {
+								return preg_match(parent::FILENAME_PREG, $f) === 1;
+							}
+						);
+					foreach($fi as $f){
+						$time = strtotime(substr($f, 0, -5));
+						if( $time >= $timeMin && $time <= $timeMax){
+							$files[] = array(
+								'timestamp' => $time,
+								'file' => $f, 
+								'device' => $dir
+							);
+						}
+					}
 				}
 			}
 		}
