@@ -42,10 +42,10 @@ class APIAdd extends API {
 			}
 			else{
 				$this->error('Error saving data.');
-			}	
+			}
 		}
 		else{
-			if( unlink( $filename) ){
+			if( !is_file( $filename ) || unlink( $filename ) ){
 				$this->output = array( 'ok' );
 			}
 			else{
