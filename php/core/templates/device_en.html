@@ -3,17 +3,19 @@
 </div>
 
 <h3>Active devices</h3>
-	<table class="accounttable">
+	<table class="accounttable table table-striped table-responsive-sm">
 		<tr>
-			<th>Device</th>
-			<th>Regenerate token</th>
-			<th>Delete</th>
+			<thead class="thead-dark">
+				<th>Device</th>
+				<th>Regenerate token</th>
+				<th>Delete</th>
+			</thead>
 		</tr>
 		<!--MULTIPLE-Devices-BEGIN-->
 			<tr>
 				<td><code>%%NAME%%</code></td>
-				<td><a href="%%SERVERURL%%/?task=devices&regenerate=%%DID%%" onclick="return confirm('Regenerate token for \'%%NAME%%\'?');"><button type="button" class="btn btn-warning">Regenerate</button></a></td>
-				<td><a href="%%SERVERURL%%/?task=devices&delete=%%DID%%" onclick="return confirm('Delete device \'%%NAME%%\'?');"><button type="button" class="btn btn-danger">Delete</button></a></td>
+				<td><a href="%%SERVERURL%%/?task=devices&regenerate=%%DID%%" class="confirm confirmLink" title="Regenerate Token" content="Regenerate token for device '%%NAME%%'?"><button type="button" class="btn btn-warning">Regenerate</button></a></td>
+				<td><a href="%%SERVERURL%%/?task=devices&delete=%%DID%%" class="confirm confirmLink" title="Delete Device" content="Delete device with name '%%NAME%%'?"><button type="button" class="btn btn-danger">Delete</button></a></td>
 			</tr>
 		<!--MULTIPLE-Devices-END-->
 	</table>

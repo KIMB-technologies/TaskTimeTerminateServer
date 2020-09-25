@@ -144,7 +144,9 @@ $("#toDialog").click( (e) => {
 		</div> &nbsp;
 		<button id="displaygraph" class="btn btn-secondary">Display Graph</button>
 	</div>
-
+	<div class="alert alert-danger %%LESSDATADISABLE%% m-2" role="alert">
+		The selected timespan contains a huge amount of data, some graphs may not display all data!
+	</div>
 
 	<div style="width: 99%;">
 		<canvas id="maingraph"></canvas>

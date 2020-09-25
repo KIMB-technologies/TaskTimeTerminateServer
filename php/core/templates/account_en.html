@@ -25,12 +25,14 @@
 </div>
 <div class="%%ISADMIN%%">
 	<h4>Other accounts</h4>
-		<table class="accounttable">
+		<table class="accounttable table table-striped table-responsive-sm">
 			<tr>
-				<th>Account</th>
-				<th>Admin</th>
-				<th>Change password</th>
-				<th>Delete</th>
+				<thead class="thead-dark">
+					<th>Account</th>
+					<th>Admin</th>
+					<th>Change password</th>
+					<th>Delete</th>
+				</thead>
 			</tr>
 			<!--MULTIPLE-Accounts-BEGIN-->
 				<tr>
@@ -46,7 +48,7 @@
 							<input type="submit" class="btn btn-secondary" value="Change password">
 						</form>
 					</td>
-					<td><a href="%%SERVERURL%%/?task=account&delete=%%AID%%" onclick="return confirm('Delete Account \'%%ANAME%%\'?');"><button type="button" class="btn btn-danger">Delete</button></a></td>
+					<td><a href="%%SERVERURL%%/?task=account&delete=%%AID%%" class="confirm confirmLink" title="Delete Account" content="Delete account with name '%%ANAME%%'?"><button type="button" class="btn btn-danger">Delete</button></a></td>
 				</tr>
 			<!--MULTIPLE-Accounts-END-->
 		</table>

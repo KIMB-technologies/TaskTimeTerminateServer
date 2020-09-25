@@ -56,6 +56,14 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 						return `${chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]} hours`;
 					}
 				}
+			},
+			scales: {
+				xAxes: [{
+					stacked: true,
+				}],
+				yAxes: [{
+					stacked: true
+				}]
 			}
 		}
 	};

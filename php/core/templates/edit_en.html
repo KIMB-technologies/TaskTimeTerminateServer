@@ -116,13 +116,15 @@ $("#endDialog").click( (e) => {
 
 <div class="%%DAYDISABLED%%">
 	<h4>Tasks <code>%%SELCTEDDAY%%</code></h4>
-	<table class="accounttable">
+	<table class="accounttable table table-striped table-responsive-sm">
 		<tr>
-			<th>Category</th>
-			<th>Task</th>
-			<th>Begin</th>
-			<th>End</th>
-			<th></th>
+			<thead class="thead-dark">
+				<th>Category</th>
+				<th>Task</th>
+				<th>Begin</th>
+				<th>End</th>
+				<th></th>
+			</thead>
 		</tr>
 		<!--MULTIPLE-Day-BEGIN-->
 			<tr>
@@ -130,7 +132,7 @@ $("#endDialog").click( (e) => {
 				<td>%%NAME%%</td>
 				<td>%%BEGIN%%</td>
 				<td>%%END%%</td>
-				<td><a href="%%SERVERURL%%/?task=record&day=%%SELCTEDDAY%%&delete=%%ID%%" onclick="return confirm('Delete \'%%NAME%%\' starting \'%%BEGIN%%\'?');"><button type="button" class="btn btn-danger">Delete</button></a></td>
+				<td><a href="%%SERVERURL%%/?task=record&day=%%SELCTEDDAY%%&delete=%%ID%%"  class="confirm confirmLink" title="Delete Task" content="Delete the task '%%NAME%%' starting at '%%BEGIN%%'?"><button type="button" class="btn btn-danger">Delete</button></a></td>
 			</tr>
 		<!--MULTIPLE-Day-END-->
 	</table>

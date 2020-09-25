@@ -71,11 +71,6 @@ table.accounttable, .form-group, .list-group{
 	min-width: 395px;
 	max-width: 800px;
 }
-table.accounttable, table.accounttable tr, table.accounttable td, table.accounttable th {
-	border: 1px solid black;
-	border-collapse: collapse;
-	padding: 2px;
-}
 table.accounttable th {
 	text-align: center;
 }

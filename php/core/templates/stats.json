@@ -1,6 +1,7 @@
 {
 	"%%NOTEDISABLE%%" : "disable",
 	"%%CMDDISABLE%%" : "disable",
+	"%%LESSDATADISABLE%%" : "disable",
 	"%%NOTEMSG%%" : "",
 	"%%TODAY%%" : "",
 	"multiples" : {

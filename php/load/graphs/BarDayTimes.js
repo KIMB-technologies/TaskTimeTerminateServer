@@ -53,17 +53,17 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 	const baseColors = ['#4E79A7', '#A0CBE8', '#F28E2B', '#FFBE7D', '#59A14F', '#8CD17D', '#B6992D', '#F1CE63', '#499894', '#86BCB6', '#E15759', '#FF9D9A', '#79706E', '#BAB0AC', '#D37295', '#FABFD2', '#B07AA1', '#D4A6C8', '#9D7660', '#D7B5A6'];
 
 	var chartData = {
-		labels : ['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23'],
+		labels : [...Array(24).keys()].map( (k) => {
+			return (k < 10 ? '0' : '' ) + k;
+		}),
 		datasets: []
 	};
-	var index = 0;
-	Object.keys(plotdata).forEach( (category) => {
+	Object.keys(plotdata).forEach( (category, index) => {
 		chartData.datasets.push({
 			label : category,
 			backgroundColor: baseColors[index % baseColors.length],
 			data: plotdata[category]
 		});
-		index++;
 	})
 	
 	var config = {
@@ -75,8 +75,19 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 				callbacks: {
 					label: function(tooltipItem, chartData) {
 						return `${chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]} hours`;
+					},
+					title : function(tooltipItem) {
+						return `${tooltipItem[0].label}:00 - ${tooltipItem[0].label}:59`;
 					}
 				}
+			},
+			scales: {
+				xAxes: [{
+					stacked: true,
+				}],
+				yAxes: [{
+					stacked: true
+				}]
 			}
 		}
 	};

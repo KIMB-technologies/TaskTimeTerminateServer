@@ -37,6 +37,9 @@ class Stats {
 	private function displayContent(array $data) : void {
 		$this->temp->setContent('COMBIDATA', json_encode($data['combi']));
 		$this->temp->setContent('PLAINDATA', json_encode(array_slice($data['plain'], 0, self::MAX_PLAIN_ELEMENTS)));
+		if(count($data['combi']) > self::MAX_PLAIN_ELEMENTS){
+			$this->temp->setContent('LESSDATADISABLE', '');
+		}
 		$this->temp->setContent('TABLEA', $this->arrayToTable($data['table']));
 		if(isset($data['today'])){
 			$this->temp->setContent('TABLEB', $this->arrayToTable($data['today']) );
@@ -45,26 +48,27 @@ class Stats {
 	} 
 
 	private function arrayToTable(array $data) : string {
-		$table = "<table class=\"accounttable\">";
+		$table = "<table class=\"table table-striped table-responsive-sm\">";
 		$head = false;
 		$lastCat = '';
 		foreach($data as $row){
 			if(!$head){
-				$table .= "<tr>";
+				$table .= "<tr><thead class=\"thead-dark\">";
 				foreach($row as $col => $val){
-					$table .= "<th>". $col ."</th>";
+					$table .= "<th scope=\"col\">". $col ."</th>";
 				}
-				$table .= "</tr>";
+				$table .= "</thead></tr>";
 				$head = true;
 			}
-			$table .= "<tr>";
+			$table .= "<tr class=" . ( $row['Category'] !== $lastCat ? "\"table-active\"" : "" ) . ">";
 			foreach($row as $key => $val){
 				if($key === 'Category'){
 					if( $val === $lastCat ){
 						$table .= "<td></td>";
 					}
 					else{
-						$table .= "<td>". $val ."</td>";
+						$table .= "<th scope=\"row\">". $val ."</th>";
+
 					}
 					$lastCat = $val;
 				}

@@ -23,10 +23,14 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 		plotdata[key] = Math.round((plotdata[key] / 3600) * 100) / 100;
 	});
 
-	let plotdataSorted = {};
-	Object.keys(plotdata).sort().forEach(key => {
-		plotdataSorted[key] = plotdata[key];
-	});
+	let plotdataValues = [];
+	let plotdataLabels = [];
+	plotdataLabels = Object.keys(plotdata).sort((a,b) => {
+			return (b.split('').reverse().join('') < a.split('').reverse().join('')) -1;
+		});
+	plotdataLabels.forEach(key => {
+			plotdataValues.push( plotdata[key] );
+		});
 	
 	/**
 	 * Colors from
@@ -38,13 +42,13 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 		type: 'bar',
 		data: {
 			datasets: [{
-				data: Object.values(plotdataSorted),
+				data: plotdataValues,
 				label: 'Daily work',
 				backgroundColor: '#A0CBE8',
 				borderColor: '#4E79A7',
 				borderWidth: 1
 			}],
-			labels: Object.keys(plotdataSorted)
+			labels: plotdataLabels
 		},
 		options: {
 			responsive: true,
