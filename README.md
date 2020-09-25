@@ -61,7 +61,8 @@ remember its token. (The name of the device can only be set once via the Webinte
 5. The data for the device will be available in the Webinterface (and through the API).
 
 ### Export from Server
-One may use any device of an account.
+One may use any device of an account, but the device will only get data from other devices 
+and no data from itself. (So create a new device for a full export!)
 
 1. Run `php ./imexport/export.php`
 2. Type credentials of device when prompted
