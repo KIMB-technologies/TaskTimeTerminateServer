@@ -38,7 +38,15 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 			labels: Object.keys(plotdata)
 		},
 		options: {
-			responsive: true
+			responsive: true,
+			tooltips: {
+				callbacks: {
+					label: function(tooltipItem, chartData) {
+						return chartData.labels[tooltipItem.index] + ': ' +
+							chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + ' hours';
+					}
+				}
+			}
 		}
 	};
 	return new Chart(canvas, config);

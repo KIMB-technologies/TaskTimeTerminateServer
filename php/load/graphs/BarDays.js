@@ -49,7 +49,14 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 		type: 'bar',
 		data: chartData,
 		options: {
-			responsive: true
+			responsive: true,
+			tooltips: {
+				callbacks: {
+					label: function(tooltipItem, chartData) {
+						return `${chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]} hours`;
+					}
+				}
+			}
 		}
 	};
 	return new Chart(canvas, config);
