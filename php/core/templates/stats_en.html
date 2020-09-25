@@ -72,55 +72,58 @@
 	<input type="hidden" id="datepickerTo">
 
 <script>
-$("select[name=time]").change(() => {
-	if($("select[name=time]").val() == "range" ){
-		$("div#rangeblock").removeClass("disable");
-	}
-	else {
-		$("div#rangeblock").addClass("disable");
-	}
-});
-if(localStorage.hasOwnProperty( 'lastServerStats' )){
-	var values = JSON.parse( localStorage.getItem( 'lastServerStats' ) );
-	$.each(values, (k,v) => {
-		$(v.tag + '[name="'+ k +'"]').val(v.value);
+	$("select[name=time]").change(() => {
+		if($("select[name=time]").val() == "range" ){
+			$("div#rangeblock").removeClass("disable");
+		}
+		else {
+			$("div#rangeblock").addClass("disable");
+		}
 	});
-	$("select[name=time]").trigger('change');
-}
-$("form").on("submit", () => {
-	var values = {};
-	$("input, select").each((k,v) => {
-		values[$(v).attr("name")] = { 
-			value : $(v).val(),
-			tag : $(v).prop("tagName")
-		};
+	$("form").on("submit", () => {
+		var values = {};
+		$("input, select").each((k,v) => {
+			values[$(v).attr("name")] = { 
+				value : $(v).val(),
+				tag : $(v).prop("tagName")
+			};
+		});
+		localStorage.setItem( 'lastServerStats', JSON.stringify(values));
 	});
-	localStorage.setItem( 'lastServerStats', JSON.stringify(values));
-});
-function dateDialog(element, destination){
-	var pos = $(destination).offset();
-	$( element ).datepicker(
-		"dialog",
-		$(destination).val(),
-		function(v,o) {
-			var m = o.selectedMonth+1;
-			var d = o.selectedDay;
-			$(destination).val(o.selectedYear +'-'+ (m <= 9 ? '0' : '') + m + '-' + (d <= 9 ? '0' : '') + d);
-		},
-		{
-			dateFormat : "yy-mm-dd"
-		},
-		[pos.left, pos.top]
-	);
-}
-$("#fromDialog").click( (e) => {
-	e.preventDefault();
-	dateDialog("input#datepickerFrom",  "input[name=range-from]");
-});
-$("#toDialog").click( (e) => {
-	e.preventDefault();
-	dateDialog("input#datepickerTo",  "input[name=range-to]");
-});
+	function dateDialog(element, destination){
+		var pos = $(destination).offset();
+		$( element ).datepicker(
+			"dialog",
+			$(destination).val(),
+			function(v,o) {
+				var m = o.selectedMonth+1;
+				var d = o.selectedDay;
+				$(destination).val(o.selectedYear +'-'+ (m <= 9 ? '0' : '') + m + '-' + (d <= 9 ? '0' : '') + d);
+			},
+			{
+				dateFormat : "yy-mm-dd"
+			},
+			[pos.left, pos.top]
+		);
+	}
+	$("#fromDialog").click( (e) => {
+		e.preventDefault();
+		dateDialog("input#datepickerFrom",  "input[name=range-from]");
+	});
+	$("#toDialog").click( (e) => {
+		e.preventDefault();
+		dateDialog("input#datepickerTo",  "input[name=range-to]");
+	});
+	$( "input#names" ).autocomplete({
+		source: "%%SERVERURL%%/ajax.php?type=task",
+		minLength: 1,
+		delay: 50
+	});
+	$( "input#cats" ).autocomplete({
+		source: "%%SERVERURL%%/ajax.php?type=category",
+		minLength: 1,
+		delay: 50
+	});
 </script>
 
 <h3>Tables</h3>
@@ -180,4 +183,12 @@ $("#toDialog").click( (e) => {
 			}
 		});
 	});
+
+	if(localStorage.hasOwnProperty( 'lastServerStats' )){
+		var values = JSON.parse( localStorage.getItem( 'lastServerStats' ) );
+		$.each(values, (k,v) => {
+			$(v.tag + '[name="'+ k +'"]').val(v.value);
+		});
+		$("select[name=time]").trigger('change');
+	}
 </script>

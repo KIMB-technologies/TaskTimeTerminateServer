@@ -56,11 +56,6 @@
 <input type="hidden" id="datepickerEnd">
 
 <script>
-var usedTasksCategories = localStorage.hasOwnProperty( 'usedTasksCategories' ) ?
-	JSON.parse( localStorage.getItem( 'usedTasksCategories' ) ) : {
-		"categories" : [],
-		"tasks" : []
-	};
 if(sessionStorage.hasOwnProperty( 'lastServerTask' )){
 	var values = JSON.parse( sessionStorage.getItem( 'lastServerTask' ) );
 	$.each(values, (k,v) => {
@@ -68,17 +63,16 @@ if(sessionStorage.hasOwnProperty( 'lastServerTask' )){
 	});
 }
 $( "input#category" ).autocomplete({
-	source: usedTasksCategories.categories,
-	minLength: 1
+	source: "%%SERVERURL%%/ajax.php?type=category",
+	minLength: 1,
+	delay: 50
 });
 $( "input#task" ).autocomplete({
-	source: usedTasksCategories.tasks,
-	minLength: 1
+	source: "%%SERVERURL%%/ajax.php?type=task",
+	minLength: 1,
+	delay: 50
 });
 $("form").on("submit", () => {
-	usedTasksCategories.categories.push($( "input#category" ).val());
-	usedTasksCategories.tasks.push($( "input#task" ).val());
-	localStorage.setItem( 'usedTasksCategories', JSON.stringify(usedTasksCategories) );
 	var values = {};
 	$("input").each((k,v) => {
 		values[$(v).attr("name")] = $(v).val();
