@@ -43,7 +43,7 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 				callbacks: {
 					label: function(tooltipItem, chartData) {
 						return chartData.labels[tooltipItem.index] + ': ' +
-							chartData.datasets[0].data[tooltipItem.index] + ' hours';
+							chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + ' hours';
 					}
 				}
 			}
