@@ -35,14 +35,12 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 		labels : ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
 		datasets: []
 	};
-	var index = 0;
-	Object.keys(plotdata).forEach( (category) => {
+	Object.keys(plotdata).forEach( (category, index) => {
 		chartData.datasets.push({
 			label : category,
 			backgroundColor: baseColors[index % baseColors.length],
 			data: plotdata[category]
 		});
-		index++;
 	})
 	
 	var config = {
@@ -53,13 +51,18 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 			tooltips: {
 				callbacks: {
 					label: function(tooltipItem, chartData) {
-						return `${chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]} hours`;
+						return `${chartData.datasets[tooltipItem.datasetIndex].label} ${chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]} hours`;
+					},
+					title : function(tooltipItem, chartData) {
+						var daySum = chartData.datasets.reduce((p,c) => p + c.data[tooltipItem[0].index], 0);
+						return `${tooltipItem[0].label}: ${daySum} hours`;
 					}
 				}
 			},
 			scales: {
 				xAxes: [{
 					stacked: true,
+					beginAtZero: true
 				}],
 				yAxes: [{
 					stacked: true

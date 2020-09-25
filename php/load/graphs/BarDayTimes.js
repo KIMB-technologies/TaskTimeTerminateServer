@@ -74,16 +74,18 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 			tooltips: {
 				callbacks: {
 					label: function(tooltipItem, chartData) {
-						return `${chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]} hours`;
+						return `${chartData.datasets[tooltipItem.datasetIndex].label} ${chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]} hours`;
 					},
-					title : function(tooltipItem) {
-						return `${tooltipItem[0].label}:00 - ${tooltipItem[0].label}:59`;
+					title : function(tooltipItem, chartData) {
+						var daySum = chartData.datasets.reduce((p,c) => p + c.data[tooltipItem[0].index], 0);
+						return `${tooltipItem[0].label}:00 - ${tooltipItem[0].label}:59: ${daySum} hours`;
 					}
 				}
 			},
 			scales: {
 				xAxes: [{
 					stacked: true,
+					beginAtZero: true
 				}],
 				yAxes: [{
 					stacked: true
