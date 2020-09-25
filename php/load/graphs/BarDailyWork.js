@@ -26,7 +26,7 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 	let plotdataValues = [];
 	let plotdataLabels = [];
 	plotdataLabels = Object.keys(plotdata).sort((a,b) => {
-			return (b.split('').reverse().join('') < a.split('').reverse().join('')) -1;
+			return (b.split('.').reverse().join('-') < a.split('.').reverse().join('-')) -1;
 		});
 	plotdataLabels.forEach(key => {
 			plotdataValues.push( plotdata[key] );
