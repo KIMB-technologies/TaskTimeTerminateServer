@@ -35,3 +35,17 @@ $(() => {
 		});
 	});
 });
+
+function checkForLoginCode(){
+	var url = window.location.href;
+	if(	localStorage.hasOwnProperty("loginToken") &&
+		( !sessionStorage.hasOwnProperty("tokenUsed") || parseInt(sessionStorage.getItem('tokenUsed')) + 10000 < Date.now() ) &&
+		url.substring(url.length - 6) !== 'logout'
+	){
+		sessionStorage.setItem("tokenUsed", Date.now());
+		let data = localStorage.getItem("loginToken").split(',');
+		$.post(url, { "group": data[1], "token": data[0]}, () => {
+			window.location.reload();
+		});
+	}
+}

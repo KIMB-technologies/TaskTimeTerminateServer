@@ -19,13 +19,15 @@ class Login {
 
 	private JSONReader $groupList;
 
-	public function __construct( string $group = '', string $client = '', string $token = '' ) {
+	public function __construct( string $group = '', string $token = '', string $client = '' ) {
 		$this->groupList = new JSONReader('groups');
 		if(!empty($group) && !empty($client) && !empty($token)){
 			$this->apiClientLogin($group, $client, $token);
 		}
-
-		if( TaskTimeTerminate === 'GUI' && session_status() === PHP_SESSION_ACTIVE ){
+		else if(!empty($group) && !empty($token)){
+			$this->sessionLogin($group, $token);
+		}
+		else if( TaskTimeTerminate === 'GUI' && session_status() === PHP_SESSION_ACTIVE ){
 			$this->userSessionLogin();
 		}
 	}
@@ -44,6 +46,18 @@ class Login {
 		$this->logUserOut();
 	}
 
+	public function sessionLogin(string $group, string $token) : void {
+		if( $this->groupList->isValue([$group]) ){
+			$sid = $this->groupList->searchValue([$group, 'sessions'], $token, 'token');
+			if( $sid !== false ){
+				$this->logUserIn($group);
+				$this->groupList->setValue([$group, 'sessions', $sid, 'used'], time()); 
+				return;
+			}
+		}
+		$this->logUserOut();
+	}
+
 	private function userSessionLogin() : void {
 		$this->loggedIn = isset($_SESSION['login']) && $_SESSION['login'] === true
 			&& $_SESSION['login_time'] + 600 > time();
@@ -56,14 +70,27 @@ class Login {
 		}
 	}
 
-	public function userLogin(string $group, string $password) : void {
+	public function userLogin(string $group, string $password, bool $stayLoggedIn = false) : ?string {
 		if( $this->groupList->isValue([$group]) ){
 			if(self::checkHashedPassword($password, $this->groupList->getValue([$group, 'passhash']))){
 				$this->logUserIn($group);
-				return;
+
+				if( $stayLoggedIn ) {
+					$token = Utilities::randomCode(50, Utilities::ID);
+					$this->groupList->setValue([$group, 'sessions', null], array(
+						"browseros" => Utilities::getBrowserOS(),
+						"used" => 0,
+						"token" => $token
+					));
+					return $token;
+				}
+				else{
+					return null;
+				}
 			}
 		}
 		$this->logUserOut();
+		return null;
 	}
 
 	private function logUserIn(string $group, string $device = "") : void {

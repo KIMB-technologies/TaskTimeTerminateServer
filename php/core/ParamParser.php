@@ -40,6 +40,11 @@ class ParamParser {
 			!empty($_POST['group']) && !empty($_POST['password']); 
 	}
 
+	public function isSessionPost() : bool {
+		return $_SERVER['REQUEST_METHOD'] === 'POST' &&
+			!empty($_POST['group']) && !empty($_POST['token']); 
+	}
+
 	public function isLogoutGet() : bool {
 		return $_SERVER['REQUEST_METHOD'] === 'GET' &&
 			isset($_GET['logout']);
@@ -56,6 +61,9 @@ class ParamParser {
 					return $pw;
 				}
 			}
+		}
+		else if($name === 'token' ){
+			return !empty($_POST['token']) && is_string($_POST['token']) ? preg_replace('/[^A-Za-z0-9]/', '', $_POST['token']) : '';
 		}
 		return '';
 	}

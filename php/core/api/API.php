@@ -35,7 +35,7 @@ abstract class API {
 	public function request(array $post) : void {
 		$this->validatePost($post);
 		if( !$this->hasError ){
-			$this->login = new Login($post['group'], $post['client'], $post['token']);
+			$this->login = new Login($post['group'], $post['token'], $post['client']);
 			if( $this->login->isLoggedIn()){
 				$this->handleAPITask();
 			}

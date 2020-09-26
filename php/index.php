@@ -15,13 +15,31 @@ require_once( __DIR__ . '/core/load.php' );
 
 $param = new ParamParser();
 $login = new Login();
-if( !$login->isLoggedIn() && $param->isLoginPost() ){
-	$login->userLogin($param->loginPost('group'), $param->loginPost('password'));
-}
-if($login->isLoggedIn() && $param->isLogoutGet()){
-	$login->logUserOut();
-}
 $gui = new WebGUI($param, $login);
+
+if( $login->isLoggedIn() ){
+	if($param->isLogoutGet()){
+		$login->logUserOut();
+	}
+}
+else {
+	if( $param->isLoginPost() ){
+		$token = $login->userLogin(
+			$param->loginPost('group'),
+			$param->loginPost('password'),
+			!empty($_POST['stayloggedin']) && $_POST['stayloggedin'] === 'yes'
+		);
+		if(!is_null($token)){
+			$gui->showLoginToken($token);
+		}
+	}
+	else if( $param->isSessionPost() ) {
+		$login->sessionLogin(
+			$param->loginPost('group'),
+			$param->loginPost('token')
+		);
+	}
+}
 
 if( isset($_GET['err']) && in_array($_GET['err'], array(404, 403)) ){
 	$gui->errorPage($_GET['err']);

@@ -31,14 +31,6 @@ class WebGUI {
 		$this->param = $param;
 
 		$this->mainTemp = new Template('main');
-		if($this->login->isLoggedIn()){
-			$this->mainTemp->setContent('DISPLAYLOGOUTBOX', '');
-			$this->mainTemp->setContent('GROUP', $this->login->getGroup());
-		}
-		else{
-			$this->mainTemp->setContent('HOMELINK', '');
-		}
-
 		$this->fillTemplateWithImprint($this->mainTemp);
 	}
 
@@ -152,6 +144,10 @@ class WebGUI {
 		}
 	}
 
+	public function showLoginToken(string $token) : void {
+		$this->mainTemp->setContent('MOREHEADER', '<script>localStorage.setItem("loginToken", "'. $token .','. $this->login->getGroup() .'");</script>');
+	}
+
 	public function deviceManage() : void {
 		$this->mainTemp->setContent('TITLE', 'Device Management');
 		$device = new Template('device');
@@ -159,7 +155,7 @@ class WebGUI {
 
 		$r = $this->login->getGroupList();
 		$myGroup = $this->login->getGroup();
-		if( !empty($_POST['device']) || !empty($_GET['regenerate']) || !empty($_GET['delete']) ){
+		if( !empty($_POST['device']) || !empty($_GET['regenerate']) || !empty($_GET['delete']) || isset($_GET['remove']) ){
 			$device->setContent('NOTEDISABLE','');
 			if( !empty($_POST['device']) && InputParser::checkDeviceName($_POST['device']) ){
 				$name = $_POST['device'];
@@ -207,6 +203,13 @@ class WebGUI {
 				else{
 					$device->setContent('NOTEMSG','Device does not exist!');
 				}
+			}
+			else if( isset($_GET['remove']) && preg_match('/^[0-9]+$/', $_GET['remove'] ) === 1 ){
+				$device->setContent(
+					'NOTEMSG',
+					$r->isValue([$myGroup, 'sessions', $_GET['remove']]) && $r->setValue([$myGroup, 'sessions', $_GET['remove']], null) ?
+						'Deleted session!': 'Error deleting session!'
+				);
 			}
 			else{
 				$device->setContent('NOTEMSG','Invalid format!');
@@ -271,7 +274,8 @@ class WebGUI {
 			if(!empty($e)){
 				$tasks[] = array(
 					'NAME' => $this->nameList[$k],
-					'PARAM' => $e
+					'PARAM' => $e,
+					'ACTIVE' => $k === ParamParser::TASK_HOME ? 'active' : ''
 				);
 			}
 		}
@@ -292,6 +296,14 @@ class WebGUI {
 	}
 
 	public function __destruct(){
+		if($this->login->isLoggedIn()){
+			$this->mainTemp->setContent('DISPLAYLOGOUTBOX', '');
+			$this->mainTemp->setContent('GROUP', $this->login->getGroup());
+		}
+		else{
+			$this->mainTemp->setContent('HOMELINK', '');
+		}
+		
 		$this->mainTemp->output();
 	}
 }
