@@ -37,5 +37,15 @@ class Config {
 		}
 		return $d;
 	}
+
+	public static function getImprintData() : ?array {
+		if(empty($_ENV['CONF_IMPRESSUMURL']) || empty($_ENV['CONF_IMPRESSUMURL'])){
+			return null;
+		}
+		return array(
+			'IMPRESSUMURL' => $_ENV['CONF_IMPRESSUMURL'],
+			'IMPRESSUMNAME' => $_ENV['CONF_IMPRESSUMNAME']
+		);
+	}
 }
 ?>

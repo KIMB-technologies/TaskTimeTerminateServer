@@ -18,5 +18,7 @@ services:
       - DEVMODE=true
       - CONF_DOMAIN=http://localhost:8080/
       - CONF_TIMEZONE=Europe/Berlin # php timezone string
+      - CONF_IMPRESSUMURL=http://example.com/impressum
+      - CONF_IMPRESSUMNAME=Imprint and Privacy
       - ADMIN_ACCOUNT=admin
       - ADMIN_PASSWORD=password

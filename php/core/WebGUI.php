@@ -38,8 +38,20 @@ class WebGUI {
 		else{
 			$this->mainTemp->setContent('HOMELINK', '');
 		}
+
+		$this->fillTemplateWithImprint($this->mainTemp);
 	}
 
+	private function fillTemplateWithImprint( Template $t ) : void {
+		$imprintData = Config::getImprintData();
+		if(!is_null($imprintData)){
+			$t->setContent('COOKIEBANNER', '');
+			foreach($imprintData as $k => $v){
+				$t->setContent($k, $v);
+			}
+		}
+	}
+	
 	public function accountManage() : void {
 		$this->mainTemp->setContent('TITLE', 'Account Management');
 		$account = new Template('account');
@@ -276,6 +288,7 @@ class WebGUI {
 		$this->mainTemp->setContent('TITLE', 'Login');
 		$login = new Template('login');
 		$this->mainTemp->includeTemplate($login);
+		$this->fillTemplateWithImprint($login);
 	}
 
 	public function __destruct(){

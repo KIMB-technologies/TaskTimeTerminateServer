@@ -4,5 +4,8 @@
 	"%%INNERCONTAINER%%" : "",
 	"%%DISPLAYLOGOUTBOX%%" : "disable",
 	"%%GROUP%%" : "",
-	"%%HOMELINK%%" : "<a href=\"%%SERVERURL%%\/\"><button type=\"button\" class=\"btn btn-dark\">&larr; Home<\/button><\/a>"
+	"%%HOMELINK%%" : "<a href=\"%%SERVERURL%%\/\"><button type=\"button\" class=\"btn btn-dark\">&larr; Home<\/button><\/a>",
+	"%%COOKIEBANNER%%" : "disable",
+	"%%IMPRESSUMURL%%" : "",
+	"%%IMPRESSUMNAME%%" : ""
 }
