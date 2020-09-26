@@ -4,10 +4,16 @@
 	"multiples" : {
 		"Devices" : {
 			"%%NAME%%" : "Name",
-			"%%DID%%" : "-1"
+			"%%DID%%" : "-1",
+			"%%LASTUSED%%" : "Unknown"
 		},
 		"Data" : {
 			"%%NAME%%" : "Name"
+		},
+		"Sessions" : {
+			"%%BROWSEROS%%" : "Unknown",
+			"%%LASTUSED%%" : "Unknown",
+			"%%SID%%" : "-1"
 		}
 	}
 }

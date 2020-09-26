@@ -154,7 +154,7 @@ class WebGUI {
 				$did = $r->searchValue([$myGroup, 'devices'], $name, 'name');
 				if( $did === false ){
 					$token = Utilities::randomCode(50, Utilities::ID);
-					if($r->setValue([$myGroup, 'devices', null], array( 'name' => $name, 'token' => $token))){
+					if($r->setValue([$myGroup, 'devices', null], array( 'name' => $name, 'token' => $token, 'used' => 0))){
 						$device->setContent('NOTEMSG','Added device "'. $name .'" with token<br>"<code>'. $token .'</code>"!');
 					}
 					else{
@@ -205,10 +205,21 @@ class WebGUI {
 		foreach($r->getValue([$this->login->getGroup(), 'devices']) as $d){
 			$dv[] = array(
 				"NAME" => $d['name'],
-				"DID" => $d['name']
+				"DID" => $d['name'],
+				"LASTUSED" => $d['used'] > 0 ? date('Y-m-d H:i', $d['used']) : 'Never'
 			);
 		}
 		$device->setMultipleContent('Devices', $dv);
+
+		$sv = array();
+		foreach($r->getValue([$this->login->getGroup(), 'sessions']) as $k => $d){
+			$sv[] = array(
+				"BROWSEROS" => $d['browseros'],
+				"LASTUSED" => $d['used'] > 0 ? date('Y-m-d H:i', $d['used']) : 'Never',
+				"SID" => $k
+			);
+		}
+		$device->setMultipleContent('Sessions', $sv);
 
 		if( is_dir(API::getStorageDir($myGroup)) ){
 			$ds = array();

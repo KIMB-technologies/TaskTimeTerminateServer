@@ -85,6 +85,12 @@ class Utilities {
 		}
 		return $ok && rmdir($dir);
 	}
+
+	public static function getBrowserOS() : string {
+		$b = get_browser();
+		return $b->browser . ' ' . $b->version . ' on ' . $b->platform;
+	}
+
 }
 
 ?>

@@ -7,6 +7,7 @@
 		<tr>
 			<thead class="thead-dark">
 				<th>Device</th>
+				<th>Last used</th>
 				<th>Regenerate token</th>
 				<th>Delete</th>
 			</thead>
@@ -14,6 +15,7 @@
 		<!--MULTIPLE-Devices-BEGIN-->
 			<tr>
 				<td><code>%%NAME%%</code></td>
+				<td><code>%%LASTUSED%%</code></td>
 				<td><a href="%%SERVERURL%%/?task=devices&regenerate=%%DID%%" class="confirm confirmLink" title="Regenerate Token" content="Regenerate token for device '%%NAME%%'?"><button type="button" class="btn btn-warning">Regenerate</button></a></td>
 				<td><a href="%%SERVERURL%%/?task=devices&delete=%%DID%%" class="confirm confirmLink" title="Delete Device" content="Delete device with name '%%NAME%%'?"><button type="button" class="btn btn-danger">Delete</button></a></td>
 			</tr>
@@ -48,3 +50,24 @@
 		<li class="list-group-item"><code>%%NAME%%</code></li>
 	<!--MULTIPLE-Data-END-->
 </ul>
+
+<h3>Web session</h3>
+	<p>
+		When a user ticks the box "Stay logged in" the a session will be created and shown here.
+	</p>
+	<table class="accounttable table table-striped table-responsive-sm">
+		<tr>
+			<thead class="thead-dark">
+				<th>Device</th>
+				<th>Last used</th>
+				<th>Remove</th>
+			</thead>
+		</tr>
+		<!--MULTIPLE-Sessions-BEGIN-->
+			<tr>
+				<td><code>%%BROWSEROS%%</code></td>
+				<td><code>%%LASTUSED%%</code></td>
+				<td><a href="%%SERVERURL%%/?task=devices&remove=%%SID%%" class="confirm confirmLink" title="Delete Device" content="Delete session on '%%BROWSEROS%%'?"><button type="button" class="btn btn-danger">Remove</button></a></td>
+			</tr>
+		<!--MULTIPLE-Sessions-END-->
+	</table>

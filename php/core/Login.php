@@ -35,6 +35,7 @@ class Login {
 			$did = $this->groupList->searchValue([$group, 'devices'], $client, 'name');
 			if( $did !== false ){
 				if( $this->groupList->getValue([$group, 'devices', $did, 'token']) === $token ){
+					$this->groupList->setValue([$group, 'devices', $did, 'used'], time()); 
 					$this->logUserIn($group, $client);
 					return;
 				}
@@ -131,7 +132,8 @@ class Login {
 			return $groups->setValue([$group], array(
 				"passhash"  => self::genHashedPassword($password),
 				"admin" => $admin,
-				"devices" => array()
+				"devices" => array(),
+				"sessions" => array()
 			));
 		}
 	}
