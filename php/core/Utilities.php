@@ -89,7 +89,7 @@ class Utilities {
 	public static function getBrowserOS() : string {
 		$b = get_browser();
 		if( $b->platform === "MacOSX"){
-			$b->platform = "mac OS";
+			$b->platform = "macOS";
 		}
 		return $b->browser .  ($b->version === "0.0" ? '' : ' ' . $b->version) . ' on ' . $b->platform;
 	}
