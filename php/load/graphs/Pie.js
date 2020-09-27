@@ -5,12 +5,22 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 	 * The function should return the ChartJS object.
 	 */
 
+	// multiple categories or just one?
+	var allCategories = []
+	combiData.forEach(c => {
+		if( !allCategories.includes(c.category) ) {
+			allCategories.push(c.category)
+		}
+	});
+	// show tasks if one category, else show categories
+	var catsColumn = allCategories.length === 1 ? 'name' : 'category';
+
 	var plotdata = {}
 	combiData.forEach( (v) => {
-		if( !plotdata.hasOwnProperty(v.name)){
-			plotdata[v.name] = 0
+		if( !plotdata.hasOwnProperty(v[catsColumn])){
+			plotdata[v[catsColumn]] = 0
 		}
-		plotdata[v.name] += v.duration;
+		plotdata[v[catsColumn]] += v.duration;
 	});
 	Object.keys(plotdata).forEach(function(category) {
 		plotdata[category] = Math.round((plotdata[category]/3600) * 100) / 100;
@@ -27,7 +37,7 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 	do{
 		colors = colors.concat(baseColors);
 	} while(colors.length < Object.keys(plotdata).length);
-
+	
 	var config = {
 		type: 'pie',
 		data: {

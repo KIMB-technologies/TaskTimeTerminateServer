@@ -52,6 +52,7 @@ class Login {
 			if( $sid !== false ){
 				$this->logUserIn($group);
 				$this->groupList->setValue([$group, 'sessions', $sid, 'used'], time()); 
+				$this->groupList->setValue([$group, 'sessions', $sid, 'browseros'], Utilities::getBrowserOS()); 
 				return;
 			}
 		}

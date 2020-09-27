@@ -1,11 +1,15 @@
 FROM kimbtechnologies/php_nginx:latest 
 
-# copy php files, nginx conf and startup scripts
-COPY --chown=www-data:www-data ./php/ /php-code/
-COPY --chown=www-data:www-data ./start/ /start/
+# enable get_browser() in PHP
+RUN mkdir /start/ \
+	&& curl -L https://browscap.org/stream?q=Lite_PHP_BrowsCapINI -o /start/php_browscap.ini \
+	&& echo "browscap = /start/php_browscap.ini" > /usr/local/etc/php/conf.d/enable_browscap.ini
+
+# config files, changed seldom
 COPY ./nginx.conf /etc/nginx/more-server-conf.conf 
 COPY ./startup-before.sh  /
-COPY ./VERSION /php-code/VERSION
+COPY ./start/* /start/
 
-RUN curl -L https://browscap.org/stream?q=Lite_PHP_BrowsCapINI -o /start/lite_php_browscap.ini \
-	&& echo "browscap = /start/lite_php_browscap.ini" > /usr/local/etc/php/conf.d/enable_browscap.ini
+# php files, changed more often
+COPY ./php/ /php-code/
+COPY ./VERSION /php-code/VERSION

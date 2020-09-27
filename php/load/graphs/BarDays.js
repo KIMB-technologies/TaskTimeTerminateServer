@@ -5,39 +5,66 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 	 * The function should return the ChartJS object.
 	 */
 
-	var allCategories = []
-	plainData.forEach(data => {
-		if( !allCategories.includes(data.category) ) {
-			allCategories.push(data.category)
-		}
-	});
-	var catsColumn = allCategories.length === 1 ? 'name' : 'category';
+	function getLabelFromTimestamp(t) {
+		let date = new Date(t * 1000);
+		let day = (date.getDate() > 9 ? '' : '0') + date.getDate();
+		let month = (date.getMonth() + 1 > 9 ? '' : '0') + (date.getMonth() + 1);
 
-	var dayMap = {
-		0:6,
-		1:0,
-		2:1,
-		3:2,
-		4:3,
-		5:4,
-		6:5,
+		return `${day}.${month}.${date.getFullYear()}`;
 	}
-	var plotdata = {}
-	plainData.forEach( (v) => {
-		var day = dayMap[new Date(v.begin*1000).getDay()];
-		if( !plotdata.hasOwnProperty(v[catsColumn])){
-			plotdata[v[catsColumn]] = []
-			for(var d = 0; d < 7; d++){
-				plotdata[v[catsColumn]][d] = 0;
-			}
+
+	// get time span and all categories
+	var minDate = Number.MAX_SAFE_INTEGER;
+	var maxDate = Number.MIN_SAFE_INTEGER;
+	var allCategories = {}
+	var allNames = {}
+	plainData.forEach(data => {
+		if( data.begin < minDate ){
+			minDate = data.begin;
 		}
-		plotdata[v[catsColumn]][day] += v.duration;
+		if( data.end > maxDate ){
+			maxDate = data.end;
+		}
+		if( !allCategories.hasOwnProperty(data.category)){
+			allCategories[data.category] = 0;
+		}
+		if( !allNames.hasOwnProperty(data.name)){
+			allNames[data.name] = 0;
+		}
+	});
+	if(Object.keys(allCategories).length === 1){
+		var catsColumn = 'name';
+		var allCats = allNames;
+	}
+	else{
+		var catsColumn = 'category';
+		var allCats = allCategories;
+	}
+
+	// fill (empty) categories in each day
+	let plotdata = {};
+	let plotdataLabels = [];
+	for( let timestamp = minDate; timestamp <= maxDate; timestamp += 86400){
+		let label = getLabelFromTimestamp(timestamp);
+		plotdata[label] = Object.assign({}, allCats);
+		plotdataLabels.push(label)
+	}
+	let lastLabel = getLabelFromTimestamp(maxDate);
+	if( !plotdata.hasOwnProperty(lastLabel)){
+		plotdata[lastLabel] = Object.assign({}, allCats);
+		plotdataLabels.push(lastLabel)
+	}
+
+	// fill with data
+	plainData.forEach(data => {
+		plotdata[getLabelFromTimestamp(data.begin)][data[catsColumn]] += data.duration;
 	});
 
-	Object.keys(plotdata).forEach(function(category) {
-		for(var d = 0; d < 7; d++){
-			plotdata[category][d] = Math.round((plotdata[category][d]/3600) * 100) / 100;
-		}
+	// convert to hours
+	Object.keys(plotdata).forEach(function(label) {
+		Object.keys(plotdata[label]).forEach(function(category) {
+			plotdata[label][category] = Math.round((plotdata[label][category] / 3600) * 100) / 100;
+		});
 	});
 
 	/**
@@ -48,19 +75,31 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 	 */
 	const baseColors = ['#4E79A7', '#A0CBE8', '#F28E2B', '#FFBE7D', '#59A14F', '#8CD17D', '#B6992D', '#F1CE63', '#499894', '#86BCB6', '#E15759', '#FF9D9A', '#79706E', '#BAB0AC', '#D37295', '#FABFD2', '#B07AA1', '#D4A6C8', '#9D7660', '#D7B5A6'];
 
+	var categoryDatasetIdMap = {};
 	var chartData = {
-		labels : ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+		labels : plotdataLabels,
 		datasets: []
 	};
-	Object.keys(plotdata).forEach( (category, index) => {
-		chartData.datasets.push({
-			label : category,
-			backgroundColor: baseColors[index % baseColors.length],
-			data: plotdata[category]
+
+	var datasetIndex = 0;
+	plotdataLabels.forEach(function(label) {
+		Object.keys(plotdata[label]).forEach(function(category) {
+			if(!categoryDatasetIdMap.hasOwnProperty(category)){
+				categoryDatasetIdMap[category] = datasetIndex;
+				chartData.datasets.push({
+					label : category,
+					backgroundColor: baseColors[datasetIndex % baseColors.length],
+					data: []
+				});
+				datasetIndex++;
+			}
+			chartData.datasets[categoryDatasetIdMap[category]].data.push(
+				plotdata[label][category]
+			);
 		});
-	})
+	});
 	
-	var config = {
+	let config = {
 		type: 'bar',
 		data: chartData,
 		options: {
@@ -86,5 +125,6 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 			}
 		}
 	};
+
 	return new Chart(canvas, config);
 }
