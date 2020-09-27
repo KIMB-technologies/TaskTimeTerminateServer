@@ -101,7 +101,8 @@
 				$(destination).val(o.selectedYear +'-'+ (m <= 9 ? '0' : '') + m + '-' + (d <= 9 ? '0' : '') + d);
 			},
 			{
-				dateFormat : "yy-mm-dd"
+				dateFormat : "yy-mm-dd",
+				firstDay: 1
 			},
 			[pos.left, pos.top]
 		);

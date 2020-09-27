@@ -13,9 +13,18 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 	});
 	var catsColumn = allCategories.length === 1 ? 'name' : 'category';
 
+	var dayMap = {
+		0:6,
+		1:0,
+		2:1,
+		3:2,
+		4:3,
+		5:4,
+		6:5,
+	}
 	var plotdata = {}
 	plainData.forEach( (v) => {
-		var day = new Date(v.begin*1000).getDay();
+		var day = dayMap[new Date(v.begin*1000).getDay()];
 		if( !plotdata.hasOwnProperty(v[catsColumn])){
 			plotdata[v[catsColumn]] = []
 			for(var d = 0; d < 7; d++){
