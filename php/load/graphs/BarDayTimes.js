@@ -5,6 +5,14 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 	 * The function should return the ChartJS object.
 	 */
 
+	var allCategories = []
+	plainData.forEach(data => {
+		if( !allCategories.includes(data.category) ) {
+			allCategories.push(data.category)
+		}
+	});
+	var catsColumn = allCategories.length === 1 ? 'name' : 'category';
+
 	var plotdata = {}
 	plainData.forEach( (v) => {
 		var begin = new Date(v.begin*1000);
@@ -16,24 +24,24 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 		var secondsEnd = end.getMinutes() * 60 + end.getSeconds();
 
 		for( var hour = hourBegin; hour <= hourEnd; hour++){
-			if( !plotdata.hasOwnProperty(v.category)){
-				plotdata[v.category] = []
+			if( !plotdata.hasOwnProperty(v[catsColumn])){
+				plotdata[v[catsColumn]] = []
 				for(var h = 0; h < 24; h++){
-					plotdata[v.category][h] = 0;
+					plotdata[v[catsColumn]][h] = 0;
 				}
 			}
 
 			if( hour !== hourEnd && hour !== hourBegin ){
-				plotdata[v.category][hour] += 3600;
+				plotdata[v[catsColumn]][hour] += 3600;
 			}
 			else if (hour === hourBegin && hour === hourEnd ){
-				plotdata[v.category][hour] += v.duration;
+				plotdata[v[catsColumn]][hour] += v.duration;
 			}
 			else if( hour === hourEnd ){
-				plotdata[v.category][hour] += secondsEnd;
+				plotdata[v[catsColumn]][hour] += secondsEnd;
 			}
 			else if( hour === hourBegin){
-				plotdata[v.category][hour] += 3600 - secondsBegin;
+				plotdata[v[catsColumn]][hour] += 3600 - secondsBegin;
 			}
 		}
 	});

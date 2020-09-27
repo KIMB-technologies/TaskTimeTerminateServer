@@ -17,6 +17,7 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 	var minDate = Number.MAX_SAFE_INTEGER;
 	var maxDate = Number.MIN_SAFE_INTEGER;
 	var allCategories = {}
+	var allNames = {}
 	plainData.forEach(data => {
 		if( data.begin < minDate ){
 			minDate = data.begin;
@@ -27,25 +28,36 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 		if( !allCategories.hasOwnProperty(data.category)){
 			allCategories[data.category] = 0;
 		}
+		if( !allNames.hasOwnProperty(data.name)){
+			allNames[data.name] = 0;
+		}
 	});
+	if(Object.keys(allCategories).length === 1){
+		var catsColumn = 'name';
+		var allCats = allNames;
+	}
+	else{
+		var catsColumn = 'category';
+		var allCats = allCategories;
+	}
 
 	// fill (empty) categories in each day
 	let plotdata = {};
 	let plotdataLabels = [];
 	for( let timestamp = minDate; timestamp <= maxDate; timestamp += 86400){
 		let label = getLabelFromTimestamp(timestamp);
-		plotdata[label] = Object.assign({}, allCategories);
+		plotdata[label] = Object.assign({}, allCats);
 		plotdataLabels.push(label)
 	}
 	let lastLabel = getLabelFromTimestamp(maxDate);
 	if( !plotdata.hasOwnProperty(lastLabel)){
-		plotdata[lastLabel] = Object.assign({}, allCategories);
+		plotdata[lastLabel] = Object.assign({}, allCats);
 		plotdataLabels.push(lastLabel)
 	}
 
 	// fill with data
 	plainData.forEach(data => {
-		plotdata[getLabelFromTimestamp(data.begin)][data.category] += data.duration;
+		plotdata[getLabelFromTimestamp(data.begin)][data[catsColumn]] += data.duration;
 	});
 
 	// convert to hours

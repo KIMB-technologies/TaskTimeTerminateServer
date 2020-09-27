@@ -5,16 +5,24 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 	 * The function should return the ChartJS object.
 	 */
 
+	var allCategories = []
+	plainData.forEach(data => {
+		if( !allCategories.includes(data.category) ) {
+			allCategories.push(data.category)
+		}
+	});
+	var catsColumn = allCategories.length === 1 ? 'name' : 'category';
+
 	var plotdata = {}
 	plainData.forEach( (v) => {
 		var day = new Date(v.begin*1000).getDay();
-		if( !plotdata.hasOwnProperty(v.category)){
-			plotdata[v.category] = []
+		if( !plotdata.hasOwnProperty(v[catsColumn])){
+			plotdata[v[catsColumn]] = []
 			for(var d = 0; d < 7; d++){
-				plotdata[v.category][d] = 0;
+				plotdata[v[catsColumn]][d] = 0;
 			}
 		}
-		plotdata[v.category][day] += v.duration;
+		plotdata[v[catsColumn]][day] += v.duration;
 	});
 
 	Object.keys(plotdata).forEach(function(category) {
