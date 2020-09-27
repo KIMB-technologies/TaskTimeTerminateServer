@@ -77,8 +77,7 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 						return `${chartData.datasets[tooltipItem.datasetIndex].label} ${chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]} hours`;
 					},
 					title : function(tooltipItem, chartData) {
-						var daySum = chartData.datasets.reduce((p,c) => p + c.data[tooltipItem[0].index], 0);
-						return `${tooltipItem[0].label}:00 - ${tooltipItem[0].label}:59: ${daySum} hours`;
+						return tooltipItem[0].label + ':00 - ' + tooltipItem[0].label + ':59: ' + Math.round(chartData.datasets.reduce((p,c) => p + c.data[tooltipItem[0].index], 0) * 100) / 100 + ' hours';
 					}
 				}
 			},

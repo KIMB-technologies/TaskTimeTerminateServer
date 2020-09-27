@@ -15,7 +15,7 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 
 	// get time span and all categories
 	var minDate = Number.MAX_SAFE_INTEGER;
-	var maxDate = -1;
+	var maxDate = Number.MIN_SAFE_INTEGER;
 	var allCategories = {}
 	plainData.forEach(data => {
 		if( data.begin < minDate ){
@@ -32,10 +32,15 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 	// fill (empty) categories in each day
 	let plotdata = {};
 	let plotdataLabels = [];
-	for( timestamp = minDate; timestamp <= maxDate; timestamp += 86400){
+	for( let timestamp = minDate; timestamp <= maxDate; timestamp += 86400){
 		let label = getLabelFromTimestamp(timestamp);
 		plotdata[label] = Object.assign({}, allCategories);
 		plotdataLabels.push(label)
+	}
+	let lastLabel = getLabelFromTimestamp(maxDate);
+	if( !plotdata.hasOwnProperty(lastLabel)){
+		plotdata[lastLabel] = Object.assign({}, allCategories);
+		plotdataLabels.push(lastLabel)
 	}
 
 	// fill with data
@@ -93,8 +98,7 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 						return `${chartData.datasets[tooltipItem.datasetIndex].label} ${chartData.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]} hours`;
 					},
 					title : function(tooltipItem, chartData) {
-						var daySum = chartData.datasets.reduce((p,c) => p + c.data[tooltipItem[0].index], 0);
-						return `${tooltipItem[0].label}: ${daySum} hours`;
+						return tooltipItem[0].label + ': '+ Math.round(chartData.datasets.reduce((p,c) => p + c.data[tooltipItem[0].index], 0) * 100) / 100 + ' hours';
 					}
 				}
 			},
