@@ -48,7 +48,7 @@ class Stats {
 	} 
 
 	private function arrayToTable(array $data) : string {
-		$table = "<table class=\"table table-striped table-responsive-sm\">";
+		$table = "<table class=\"table table-striped table-responsive-sm statstable\">";
 		$head = false;
 		$lastCat = '';
 		foreach($data as $row){

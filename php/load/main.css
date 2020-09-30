@@ -29,6 +29,15 @@ div#main{
 	border-radius: 4px;
 	min-height: 300px;
 }
+div#logoutbox{
+	float: right;
+}
+div.inner{
+	min-width: 350px;
+	max-width: 800px;
+	width: 100%;
+	margin:auto;
+}
 div#footer{
 	color: white;
 }
@@ -37,40 +46,23 @@ div#footer a, div#footer a:visited, div#footer a:hover {
 	color: white;
 }
 
-div.achtung {
-	border: 2px solid red;
-	padding: 5px;
-	border-radius: 4px;
-	background-color: orange;
-	margin:auto;
-	max-width: 500px;
-}
-div.note {
-	border: 2px solid darkblue;
-	padding: 5px;
-	border-radius: 4px;
-	background-color: lightblue;
-	margin:auto;
-	max-width: 500px;
-}
-
 .disable{
 	display: none;
 }
-
-div#logoutbox{
-	background: #ccc;
-	border-radius: 5px;
-	border: solid 1px black;
-	padding: 5px;
-	float: right;
-}
-
-table.accounttable, .form-group, .list-group{
-	width: 100%;
-	min-width: 345px;
-	max-width: 800px;
-}
 table.accounttable th {
 	text-align: center;
+}
+
+table.statstable, div.graphbox {
+	width: calc(100%-10px);
+}
+
+div.inline-popover{
+	position: static;
+}
+div.inline-popover h3{
+	margin-top: initial;
+}
+div.inline-popover .popover-body{
+	text-align: right;
 }

@@ -133,12 +133,14 @@
 		<p><code>%%CMD%%</code></p>
 	</div>
 
+</div> <!-- opened in main.html -->
 	<div style="margin-bottom: 10px;">
 		%%TABLEA%%
 	</div>
 	<div>
 		%%TABLEB%%
 	</div>
+<div class="inner"><!-- reopen for main.html -->
 
 <h3>Graph</h3>
 	<div class="form-inline">
@@ -152,9 +154,12 @@
 		The selected timespan contains a huge amount of data, some graphs may not display all data!
 	</div>
 
-	<div style="width: 99%;">
+</div> <!-- opened in main.html -->
+	<div class="graphbox">
 		<canvas id="maingraph"></canvas>
 	</div>
+<div class="inner"><!-- reopen for main.html -->
+
 <script>
 	var combiData = %%COMBIDATA%%;
 	var plainData = %%PLAINDATA%%;

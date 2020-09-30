@@ -36,15 +36,17 @@
 	<body>
 		<div id="main">
 			<h1>Task&shy;Time&shy;Terminate Server</h1>
-			<div id="logoutbox" class="%%DISPLAYLOGOUTBOX%%">
-				Hi <span class="badge badge-success">%%GROUP%%</span>! &mdash;
-				<a href="%%SERVERURL%%/?logout" class="btn-sm btn-warning">Logout</a>
+			<div id="logoutbox" class="%%DISPLAYLOGOUTBOX%% popover inline-popover">
+				<h3 class="popover-header">Hi <span class="badge badge-dark badge-pill">%%GROUP%%</span></h3>
+				<div class="popover-body">
+					<a href="%%SERVERURL%%/?logout" class="btn-sm btn-warning">Logout</a>
+				</div>
 			</div>
 			<p>%%HOMELINK%% <button type="button" class="btn btn-light" style="visibility: hidden;">&nbsp;</button></p>
 			<h2>%%TITLE%%</h2>
-
+			<div class="inner">
 				%%INNERCONTAINER%%
-				
+			</div>
 		</div>
 		<div id="footer">
 			<center>
