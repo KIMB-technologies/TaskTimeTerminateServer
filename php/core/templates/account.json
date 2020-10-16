@@ -8,6 +8,18 @@
 			"%%ANAME%%" : "Account",
 			"%%AADMIN%%" : "No",
 			"%%AID%%" : "-1"
+		},
+		"Shares" : {
+			"%%CATEGORY%%" : "",
+			"%%GROUP%%" : ""
+		},
+		"Category" : {
+			"%%VALUE%%" : "", 
+			"%%NAME%%" : ""
+		},
+		"Group" : {
+			"%%VALUE%%" : "", 
+			"%%NAME%%" : ""
 		}
 	}
 }

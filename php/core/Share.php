@@ -15,9 +15,10 @@ class Share {
 
 	private JSONReader $shares;
 	private Login $login;
+	private String $error = "";
 
 	public function __construct( Login $login ) {
-		$this->shares = JSONReader('shares');
+		$this->shares = new JSONReader('shares');
 		$this->login = $login;
 
 		$this->checkInitGroup($this->login->getGroup());
@@ -53,14 +54,23 @@ class Share {
 					'category' => $category,
 					'group' => $group
 				);
-				if( $this->shares->searchValue([$this->login->getGroup(), 'byme'], $byme) !== false ){ 
+				if( $this->shares->searchValue([$this->login->getGroup(), 'byme'], $byme) === false ){ 
 					$this->shares->setValue([$this->login->getGroup(), 'byme', null], $byme);
 					$this->shares->setValue([$group, 'withme', null], array(
 						'category' => $category,
 						'group' => $this->login->getGroup()
 					));
 				}
+				else {
+					$this->error = "Share already exists.";
+				}
 			}
+			else {
+				$this->error = "Unknown category to share";
+			}
+		}
+		else {
+			$this->error = "Invalid group to share with";
 		}
 	}
 
@@ -91,6 +101,9 @@ class Share {
 				$this->shares->setValue([$group, 'withme', $pos], null);
 			}
 		}
+		else {
+			$this->error = "Invalid group to delete share for";
+		}
 	}
 
 	private function getAllCategories(){
@@ -104,6 +117,14 @@ class Share {
 			'categories' => $this->getAllCategories(),
 			'groups' => array_keys($this->login->getGroupList()->getArray())
 		);
+	}
+
+	public function getErrorMessage() : string {
+		return $this->error;
+	}
+
+	public function hasError() : bool {
+		return !empty($this->error);
 	}
 
 	/**

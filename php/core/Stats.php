@@ -27,9 +27,26 @@ class Stats {
 
 		if( $_SERVER['REQUEST_METHOD'] === 'POST' ){
 			$cmd = $this->paramsToCmd();
-			if( !empty($cmd)){
+			if( !empty($cmd) ){
 				$data = new TTTStats($cmd, API::getStorageDir($this->login->getGroup()));
-				$this->displayContent($data->getAllResults());
+				$allData = $data->getAllResults();
+				if( isset($_POST['shares']) && is_array($_POST['shares']) ){
+					$shares = array();
+					foreach($_POST['shares'] as $sh ){
+						if(is_string($sh)){
+							$sh = explode('::', $sh);
+							$gr = preg_replace('/[^A-Za-z0-9]/', '', $sh[0]);
+							if(InputParser::checkCategoryInput($sh[1]) && !empty($gr) ){
+								if(!isset($shares[$gr])){
+									$shares[$gr] = array();
+								}
+								$shares[$gr][] = $sh[1];
+							}	
+						}
+					}
+					$this->addShares($allData, $cmd, $shares);
+				}
+				$this->displayContent($allData);
 			}
 		}
 	}
@@ -46,6 +63,32 @@ class Stats {
 			$this->temp->setContent('SINGLEDAYDATA', json_encode($data['today']));
 		}
 	} 
+
+	private function addShares( array &$allData, array $cmd, array $shares) : void {
+		if(in_array('-devices', $cmd)){
+			$did = array_search('-devices', $cmd);
+			unset($cmd[$did], $cmd[$did+1]);
+		}
+		if(!in_array('-cats', $cmd)){
+			$cmd[] = '-cats';
+			$cmd[] = '';
+		}
+		$cid = array_search('-cats', $cmd) + 1;
+
+		foreach($shares as $group => $cats){
+			$cmd[$cid] = implode(',', $cats);
+			$sd = new TTTStats($cmd, API::getStorageDir($group));
+			$data = $sd->getAllResults();
+			array_walk_recursive( $data, function (&$value, $key) use (&$group) {
+				if(in_array($key, ['name', 'category', 'Name', 'Category', 'Other devices', 'device'])){
+					$value = $group . '::' . $value;
+				}
+			});
+			foreach(['table','plain','combi','today'] as $key ){
+				$allData[$key] = array_merge($allData[$key], $data[$key]);
+			}
+		}
+	}
 
 	private function arrayToTable(array $data) : string {
 		$table = "<table class=\"table table-striped table-responsive-sm statstable\">";
@@ -160,6 +203,20 @@ class Stats {
 				}
 			}
 			$this->temp->setMultipleContent('Devices', $ds);
+		}
+
+		$share = new Share($this->login);
+		$withme = $share->getSharedWithMe();
+		if(!empty($withme)){
+			$this->temp->setContent('SHARESDIABLE', '');
+			$d = array();
+			foreach($withme as $w){
+				$d[] = array(
+					'%%VALUE%%' => $w['group'] . '::' . $w['category'],
+					'%%NAME%%' => '"' . $w['category'] . '" from "' . $w['group'] . '"'
+				);
+			}
+			$this->temp->setMultipleContent('Shares', $d);
 		}
 
 		$this->temp->setContent('GRAPHES', json_encode(

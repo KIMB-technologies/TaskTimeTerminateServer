@@ -49,27 +49,94 @@ class WebGUI {
 		$account = new Template('account');
 		$this->mainTemp->includeTemplate($account);
 
-		// handle pw change
-		if( !empty($_POST['type']) && $_POST['type'] === 'change'){
-			$newPw = $this->param->loginPost('password');
-			$account->setContent('NOTEDISABLE','');
-			if(!empty($newPw)){
-				if(Login::createNewGroup(
-					$this->login->getGroupList(),
-					$this->login->getGroup(),
-					$newPw,
-					$this->login->isAdmin()
-				)){
-					$account->setContent('NOTEMSG','Changed password!');
+		$share = new Share($this->login);
+
+		// handle pw change, share add
+		if( !empty($_POST['type']) ){
+			if($_POST['type'] === 'change'){
+				$newPw = $this->param->loginPost('password');
+				$account->setContent('NOTEDISABLE','');
+				if(!empty($newPw)){
+					if(Login::createNewGroup(
+						$this->login->getGroupList(),
+						$this->login->getGroup(),
+						$newPw,
+						$this->login->isAdmin()
+					)){
+						$account->setContent('NOTEMSG','Changed password!');
+					}
+					else{
+						$account->setContent('NOTEMSG','Error changing password!');
+					}
 				}
 				else{
-					$account->setContent('NOTEMSG','Error changing password!');
+					$account->setContent('NOTEMSG','Invalid password given!');
+				}
+			}
+			else if($_POST['type'] === 'share'){
+				$account->setContent('NOTEDISABLE','');
+				if( !empty($_POST['category']) && !empty($_POST['group']) ){
+					$cat = $_POST['category'];
+					$gr = $this->param->loginPost('group');
+					if( InputParser::checkCategoryInput($cat) ){
+						$share->addShare($cat, $gr);
+						if($share->hasError()){
+							$account->setContent('NOTEMSG', $share->getErrorMessage());
+						}
+						else{
+							$account->setContent('NOTEMSG','Share was added.');
+						}
+					}
+					else{
+						$account->setContent('NOTEMSG','Invalid category given.');
+					}
+				}
+				else {
+					$account->setContent('NOTEMSG','Please give category and user to share with.');
+				} 
+			}
+		}
+		else if(!empty($_GET['remove']) && is_string($_GET['remove'])
+			&& !empty($_GET['group']) && is_string($_GET['group'])
+		){
+			$account->setContent('NOTEDISABLE','');
+			$gr = preg_replace('/[^A-Za-z0-9]/', '', $_GET['group']);
+			$cat = $_GET['remove'];
+
+			if( InputParser::checkCategoryInput($cat) ){
+				$share->removeShare($cat, $gr);
+				if($share->hasError()){
+					$account->setContent('NOTEMSG', $share->getErrorMessage());
+				}
+				else{
+					$account->setContent('NOTEMSG','Share was deleted.');
 				}
 			}
 			else{
-				$account->setContent('NOTEMSG','Invalid password given!');
+				$account->setContent('NOTEMSG','Invalid category given while deleting share.');
 			}
 		}
+
+		$d = array();
+		foreach($share->getCategoriesAndGroups() as $n => $v){
+			$d[$n] = array();
+			foreach($v as $e){
+				$d[$n][] = array(
+					"NAME" => $e,
+					"VALUE" => $e
+				);
+			}
+		}
+		$account->setMultipleContent('Category', $d['categories']);
+		$account->setMultipleContent('Group', $d['groups']);
+		$shares = array();
+		foreach($share->getShares() as $s){
+			$shares[] = array(
+				'CATEGORY' => $s['category'],
+				'GROUP' => $s['group']
+			);
+		}
+		$account->setMultipleContent('Shares', $shares);
 
 		if($this->login->isAdmin()){
 			$account->setContent('ISADMIN', '');
