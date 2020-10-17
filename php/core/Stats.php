@@ -18,10 +18,12 @@ class Stats {
 
 	private Template $temp;
 	private Login $login;
+	private Share $share;
 
 	public function __construct( Template $temp, Login $login ) {
 		$this->login = $login;
 		$this->temp = $temp;
+		$this->share = new Share($this->login);
 
 		$this->setUpHtml();
 
@@ -30,22 +32,32 @@ class Stats {
 			if( !empty($cmd) ){
 				$data = new TTTStats($cmd, API::getStorageDir($this->login->getGroup()));
 				$allData = $data->getAllResults();
+
+				// share
 				if( isset($_POST['shares']) && is_array($_POST['shares']) ){
+					$withme = $this->share->getSharedWithMe();
 					$shares = array();
 					foreach($_POST['shares'] as $sh ){
 						if(is_string($sh)){
 							$sh = explode('::', $sh);
 							$gr = preg_replace('/[^A-Za-z0-9]/', '', $sh[0]);
 							if(InputParser::checkCategoryInput($sh[1]) && !empty($gr) ){
-								if(!isset($shares[$gr])){
-									$shares[$gr] = array();
+								if( in_array( array( 
+										'category' => $sh[1],
+										'group' => $gr
+								 	) , $withme )
+								){
+									if(!isset($shares[$gr])){
+										$shares[$gr] = array();
+									}
+									$shares[$gr][] = $sh[1];
 								}
-								$shares[$gr][] = $sh[1];
-							}	
+							}
 						}
 					}
 					$this->addShares($allData, $cmd, $shares);
 				}
+
 				$this->displayContent($allData);
 			}
 		}
@@ -85,7 +97,9 @@ class Stats {
 				}
 			});
 			foreach(['table','plain','combi','today'] as $key ){
-				$allData[$key] = array_merge($allData[$key], $data[$key]);
+				if(isset($allData[$key]) && isset($data[$key]) ){
+					$allData[$key] = array_merge($allData[$key], $data[$key]);
+				}
 			}
 		}
 	}
@@ -205,8 +219,7 @@ class Stats {
 			$this->temp->setMultipleContent('Devices', $ds);
 		}
 
-		$share = new Share($this->login);
-		$withme = $share->getSharedWithMe();
+		$withme = $this->share->getSharedWithMe();
 		if(!empty($withme)){
 			$this->temp->setContent('SHARESDIABLE', '');
 			$d = array();
