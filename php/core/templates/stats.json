@@ -2,10 +2,15 @@
 	"%%NOTEDISABLE%%" : "disable",
 	"%%CMDDISABLE%%" : "disable",
 	"%%LESSDATADISABLE%%" : "disable",
+	"%%SHARESDIABLE%%" : "disable",
 	"%%NOTEMSG%%" : "",
 	"%%TODAY%%" : "",
 	"multiples" : {
 		"Devices" : {
+			"%%VALUE%%" : "",
+			"%%NAME%%" : ""
+		},
+		"Shares" : {
 			"%%VALUE%%" : "",
 			"%%NAME%%" : ""
 		}
