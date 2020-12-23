@@ -73,10 +73,10 @@ and no data from itself. (So create a new device for a full export!)
 It is possible to create custom graph-views for the stats view.
 
 ### Create your own stats function
-> See an example e.g. [PieCategory](https://github.com/KIMB-technologies/TaskTimeTerminateServer/blob/master/php/load/graphs/PieCategory.js)
+> See an example e.g. [PieCategory](https://github.com/KIMB-technologies/TaskTimeTerminateServer/blob/master/php/load/graphs/Pie.js)
 
 When the user selects a graph and clicks on *Display Graph* the corresponding JS-file is loaded and the the function `createGraph(combiData, plainData, singleDayData, canvas)`
-of this file will be executed. In a file like [PieCategory](https://github.com/KIMB-technologies/TaskTimeTerminateServer/blob/master/php/load/graphs/PieCategory.js)
+of this file will be executed. In a file like [PieCategory](https://github.com/KIMB-technologies/TaskTimeTerminateServer/blob/master/php/load/graphs/Pie.js)
 such function like `createGraph(combiData, plainData, singleDayData, canvas)` can be defined.
 
 Each function gets four parameters, three `*Data` and one `canvas`.
