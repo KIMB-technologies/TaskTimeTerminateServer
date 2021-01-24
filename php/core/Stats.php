@@ -66,7 +66,7 @@ class Stats {
 	private function displayContent(array $data) : void {
 		$this->temp->setContent('COMBIDATA', json_encode($data['combi']));
 		$this->temp->setContent('PLAINDATA', json_encode(array_slice($data['plain'], 0, self::MAX_PLAIN_ELEMENTS)));
-		if(count($data['combi']) > self::MAX_PLAIN_ELEMENTS){
+		if(count($data['plain']) > self::MAX_PLAIN_ELEMENTS){
 			$this->temp->setContent('LESSDATADISABLE', '');
 		}
 		$this->temp->setContent('TABLEA', $this->arrayToTable($data['table']));
