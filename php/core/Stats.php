@@ -13,8 +13,9 @@ defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
 
 class Stats {
 
-	// max plain data elements for plots
-	const MAX_PLAIN_ELEMENTS = 2000;
+	// max and default plain data elements for plots
+	const MAX_PLAIN_ELEMENTS = 200000;
+	const DEFAULT_PLAIN_ELEMENTS = 2000;
 
 	private Template $temp;
 	private Login $login;
@@ -64,9 +65,22 @@ class Stats {
 	}
 
 	private function displayContent(array $data) : void {
+		if(!empty($_POST['plainlimit']) ){
+			$plainLimit = intval($_POST['plainlimit']);
+			if( $plainLimit < self::DEFAULT_PLAIN_ELEMENTS ){
+				$plainLimit = self::DEFAULT_PLAIN_ELEMENTS;
+			}
+			else if( $plainLimit > self::MAX_PLAIN_ELEMENTS ){
+				$plainLimit = self::MAX_PLAIN_ELEMENTS;
+			}
+		}
+		else {
+			$plainLimit = self::DEFAULT_PLAIN_ELEMENTS;
+		}
+
 		$this->temp->setContent('COMBIDATA', json_encode($data['combi']));
-		$this->temp->setContent('PLAINDATA', json_encode(array_slice($data['plain'], 0, self::MAX_PLAIN_ELEMENTS)));
-		if(count($data['plain']) > self::MAX_PLAIN_ELEMENTS){
+		$this->temp->setContent('PLAINDATA', json_encode(array_slice($data['plain'], 0, $plainLimit)));
+		if(count($data['plain']) > $plainLimit){
 			$this->temp->setContent('LESSDATADISABLE', '');
 		}
 		$this->temp->setContent('TABLEA', $this->arrayToTable($data['table']));
@@ -245,6 +259,8 @@ class Stats {
 				)
 			))
 		));
+
+		$this->temp->setContent('DEFAULT_PLAIN_ELEMENTS', self::DEFAULT_PLAIN_ELEMENTS );
 	}
 
 }

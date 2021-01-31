@@ -63,12 +63,15 @@
 		</div>
 		<div class="form-group row %%SHARESDIABLE%%">
 			<label for="shares" class="col-sm-2 col-form-label">Include shares</label>
-			<div class="col-sm-10">
+			<div class="col-sm-8">
 				<select name="shares[]" id="shares" class="custom-select" size=4 multiple>
 					<!--MULTIPLE-Shares-BEGIN-->
 						<option value="%%VALUE%%">%%NAME%%</option>
 					<!--MULTIPLE-Shares-END-->
 				</select>
+			</div>
+			<div class="col-sm-2">
+				<button type="button" id="deselectall" class="btn btn-light">Deselect</button>
 			</div>
 		</div>
 		<div class="form-group row">
@@ -77,6 +80,7 @@
 				<input type="submit" value="Show" class="btn btn-secondary">
 			</div>
 		</div>
+		<input type="hidden" name="plainlimit" id="plainlimit" value="%%DEFAULT_PLAIN_ELEMENTS%%">
 	</form>
 	<input type="hidden" id="datepickerFrom">
 	<input type="hidden" id="datepickerTo">
@@ -93,12 +97,10 @@
 	$("form").on("submit", () => {
 		var values = {};
 		$("input, select").each((k,v) => {
-			if($(v).attr('id') !== 'shares' ){
-				values[$(v).attr("name")] = { 
-					value : $(v).val(),
-					tag : $(v).prop("tagName")
-				};
-			}
+			values[$(v).attr("name")] = { 
+				value : $(v).val(),
+				tag : $(v).prop("tagName")
+			};
 		});
 		localStorage.setItem( 'lastServerStats', JSON.stringify(values));
 	});
@@ -137,6 +139,9 @@
 		minLength: 1,
 		delay: 50
 	});
+	$( "button#deselectall").click( () => {
+		$("select#shares option").prop("selected", false);
+	});
 </script>
 
 <h3>Tables</h3>
@@ -163,7 +168,8 @@
 		<button id="displaygraph" class="btn btn-secondary">Display Graph</button>
 	</div>
 	<div class="alert alert-danger %%LESSDATADISABLE%% m-2" role="alert">
-		The selected timespan contains a huge amount of data, some graphs may not display all data!
+		<p>The selected timespan contains a huge amount of data, some graphs may not display all data!</p>
+		<button type="button" id="increaselimit" class="btn btn-warning">Increase the limit</button>
 	</div>
 
 </div> <!-- opened in main.html -->
@@ -209,4 +215,15 @@
 		});
 		$("select[name=time]").trigger('change');
 	}
+
+	if(!sessionStorage.hasOwnProperty( 'lastPlainDataLimit' )){
+		sessionStorage.setItem('lastPlainDataLimit', "%%DEFAULT_PLAIN_ELEMENTS%%");
+		$("input#plainlimit").val( "%%DEFAULT_PLAIN_ELEMENTS%%" );
+	}
+	$("button#increaselimit").click( () => {
+		$("button#increaselimit").prop("disabled", true);
+		sessionStorage.setItem('lastPlainDataLimit', parseInt(sessionStorage.getItem('lastPlainDataLimit')) * 2 )
+		$("input#plainlimit").val( sessionStorage.getItem('lastPlainDataLimit') )
+		$("form").submit()
+	});
 </script>

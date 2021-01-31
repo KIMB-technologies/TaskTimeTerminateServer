@@ -21,5 +21,6 @@
 	"%%PLAINDATA%%" : "[]",
 	"%%SINGLEDAYDATA%%" : "false",
 	"%%CMD%%" : "",
-	"%%GRAPHES%%" : ""
+	"%%GRAPHES%%" : "",
+	"%%DEFAULT_PLAIN_ELEMENTS%%" : ""
 }
