@@ -16,7 +16,7 @@ $(() => {
 					$("div#confirmDialog").dialog('close');
 					ok();
 				},
-				"Abbrechen" : () => {
+				"Cancel" : () => {
 					$("div#confirmDialog").dialog('close');
 				}
 			}

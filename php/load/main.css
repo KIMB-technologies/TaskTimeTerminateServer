@@ -1,16 +1,42 @@
+/* Colors */
+:root {
+	--main-text-color: black;
+	--main-bg-color: white;
+	--main-link-color: blue;
+	--main-border-color: black;
+
+	--body-bg: #777;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--main-text-color: #eee;
+		--main-bg-color: #111;
+		--main-link-color: lightblue;
+		--main-border-color: #aaa;
+
+		--body-bg: black;
+	}
+
+	input, select, textarea {
+		background-color: var(--main-bg-color) !important;
+		color: var(--main-text-color) !important;
+	}
+}
+
 body{
 	font-family:Ubuntu,sans-serif;
 	font-size:100%;
-	background-color:#777;
+	background-color: var(--body-bg);
 }
 h1{
-	color:black;
+	color: var(--main-text-color);
 	border-bottom: 1px solid #5d7;
 	text-align:center;
 	font-type: bold;
 }
 h2{
-	color:black;
+	color:var(--main-text-color);
 	border-bottom: 1px solid #5d7;
 	text-align:left;
 	font-type: bold;
@@ -20,11 +46,11 @@ h1,h2,h3,h4{
 }
 
 div#main{
-	border: 1px solid black;
+	border: 1px solid var(--main-border-color);
 	margin:auto;
 	min-width: 350px;
 	max-width: 1600px;
-	background-color: white;
+	background-color: var(--main-bg-color);
 	padding: 5px;
 	border-radius: 4px;
 	min-height: 300px;

@@ -198,6 +198,7 @@
 				if(chart !== null){
 					chart.destroy();
 				}
+				Chart.defaults.global.legend.labels.fontColor = getComputedStyle(document.documentElement).getPropertyValue('--main-text-color');
 				chart = createGraph(
 					combiData,
 					plainData,
