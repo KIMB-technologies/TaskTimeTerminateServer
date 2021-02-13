@@ -4,6 +4,8 @@
 	--main-bg-color: white;
 	--main-link-color: blue;
 	--main-border-color: black;
+	
+	--chart-grid-color: #ddd;
 
 	--body-bg: #777;
 }
@@ -14,6 +16,8 @@
 		--main-bg-color: #111;
 		--main-link-color: lightblue;
 		--main-border-color: #aaa;
+
+		--chart-grid-color: #444;
 
 		--body-bg: black;
 	}

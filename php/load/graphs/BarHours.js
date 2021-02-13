@@ -46,9 +46,14 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 		}
 	});
 
+	stacksMap = {}
 	Object.keys(plotdata).forEach(function(category) {
 		for(var h = 0; h < 24; h++){
 			plotdata[category][h] = Math.round((plotdata[category][h]/3600) * 100) / 100;
+		}
+		if(!stacksMap.hasOwnProperty(category)){
+			let pos = category.indexOf('::');
+			stacksMap[category] = ( pos === -1 ? '' : category.substr(0, pos) );
 		}
 	});
 
@@ -70,7 +75,8 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 		chartData.datasets.push({
 			label : category,
 			backgroundColor: baseColors[index % baseColors.length],
-			data: plotdata[category]
+			data: plotdata[category],
+			stack : stacksMap[category]
 		});
 	})
 	

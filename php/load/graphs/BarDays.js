@@ -61,9 +61,15 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 	});
 
 	// convert to hours
+	stacksMap = {}
 	Object.keys(plotdata).forEach(function(label) {
 		Object.keys(plotdata[label]).forEach(function(category) {
 			plotdata[label][category] = Math.round((plotdata[label][category] / 3600) * 100) / 100;
+
+			if(!stacksMap.hasOwnProperty(category)){
+				let pos = category.indexOf('::');
+				stacksMap[category] = ( pos === -1 ? '' : category.substr(0, pos) );
+			}
 		});
 	});
 
@@ -89,7 +95,8 @@ function createGraph(combiData, plainData, singleDayData, canvas){
 				chartData.datasets.push({
 					label : category,
 					backgroundColor: baseColors[datasetIndex % baseColors.length],
-					data: []
+					data: [],
+					stack: stacksMap[category]
 				});
 				datasetIndex++;
 			}

@@ -198,13 +198,20 @@
 				if(chart !== null){
 					chart.destroy();
 				}
-				Chart.defaults.global.legend.labels.fontColor = getComputedStyle(document.documentElement).getPropertyValue('--main-text-color');
+				// text color according to theme
+				Chart.defaults.global.defaultFontColor = getComputedStyle(document.documentElement).getPropertyValue('--main-text-color');
+				
 				chart = createGraph(
 					combiData,
 					plainData,
 					singleDayData,
 					document.getElementById('maingraph').getContext('2d')
 				);
+
+				// grid color according to theme 
+				Object.keys(chart.scales).forEach(k => {
+					chart.scales[k].options.gridLines.color = getComputedStyle(document.documentElement).getPropertyValue('--chart-grid-color');
+				})
 			}
 		});
 	});
