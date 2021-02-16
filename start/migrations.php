@@ -23,5 +23,9 @@ foreach( $g->getArray() as $group => $data ){
 	if(!isset($data['sessions']) || !is_array($data['sessions'])){
 		$g->setValue([$group, 'sessions'], array());
 	}
+
+	if(!isset($data['caltoken']) || !is_string($data['caltoken']) || strlen($data['caltoken']) !== 50){
+		$g->setValue([$group, 'caltoken'], Utilities::randomCode(50, Utilities::ID));
+	}
 }
 ?>

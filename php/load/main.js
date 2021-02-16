@@ -49,3 +49,39 @@ function checkForLoginCode(){
 		});
 	}
 }
+
+var copyTokenTimeout = {};
+function clipboardButton(buttonSelector, copyText){
+	$(buttonSelector).click( () => {
+		if( copyTokenTimeout.hasOwnProperty(buttonSelector) ){
+			clearTimeout(copyTokenTimeout[buttonSelector] );
+		}
+	
+		$(buttonSelector).removeClass("btn-light");
+		navigator.clipboard.writeText(copyText).then(function() {
+			$(buttonSelector).addClass("btn-success");
+		}, function() {
+			$(buttonSelector).addClass("btn-danger");
+		});
+	
+		copyTokenTimeout[buttonSelector] = setTimeout( () => {
+			$(buttonSelector).addClass("btn-light");
+			$(buttonSelector).removeClass(["btn-danger", "btn-success"]);
+		}, 2000);
+	});
+}
+
+var tokenInputTimeout = {};
+function tokenInputInVisible(buttonSelector){
+	$(buttonSelector).click( () => {
+		if( tokenInputTimeout.hasOwnProperty(buttonSelector) ){
+			clearTimeout(tokenInputTimeout[buttonSelector]);
+		}
+
+		$(buttonSelector).attr("type", "text");
+
+		tokenInputTimeout[buttonSelector] = setTimeout( () => {
+			$(buttonSelector).attr("type", "password");
+		}, 2000);
+	});
+}

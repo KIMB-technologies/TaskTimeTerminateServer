@@ -71,3 +71,31 @@
 			</tr>
 		<!--MULTIPLE-Sessions-END-->
 	</table>
+
+<h3>Calendar Token</h3>
+	<p>
+		The systems provides a calendar API at <code>%%SERVERURL%%/api/ics.php</code> which allows to export the 
+		collected tasks as <code>*.ics</code> or subscribe to them.
+	</p>
+	<div class="container">
+		<div class="row form-group">
+			<div class="col-sm-2">
+				<button type="button" id="copytoken" class="btn btn-light form-control">Copy</button></a>
+			</div>
+			<div class="col-sm-7">
+				<input type="password" id="caltoken" value="%%CALTOKEN%%" class="form-control" readonly="readonly">
+			</div>
+			<div class="col-sm-3">
+				<a href="%%SERVERURL%%/?task=devices&newtoken=%%NEWTOKENCODE%%" class="confirm confirmLink" title="Regenerate Calendar Token" content="Regenerate the token used for the calendar API? This will invalidate the old token!"><button type="button" class="btn btn-warning form-control">Regenerate</button></a>
+			</div>
+		</div>
+	</div>	
+	<div class="alert alert-info" role="alert">
+		The actual link for a subscription or export can be found at the Statistics 
+		page. The generated export will always contain the data selected there. 
+	</div>
+
+<script>
+clipboardButton("button#copytoken", $("input#caltoken").val());
+tokenInputInVisible("input#caltoken");
+</script>

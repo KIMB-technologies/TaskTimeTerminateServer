@@ -145,7 +145,7 @@
 </script>
 
 <h3>Tables</h3>
-	<div class="alert alert-info %%CMDDISABLE%%" role="alert">
+	<div class="alert alert-info %%DATADISABLE%%" role="alert">
 		<h5 class="alert-heading">Client Command</h5>
 		<p><code>%%CMD%%</code></p>
 	</div>
@@ -177,6 +177,17 @@
 		<canvas id="maingraph"></canvas>
 	</div>
 <div class="inner"><!-- reopen for main.html -->
+
+<div class="container mt-2 %%DATADISABLE%%">
+	<div class="alert alert-secondary" role="alert">
+		<h4 class="alert-heading">Calendar</h4>
+		<p>One may download the current selection as calendar <code>*.ics</code> file or subscribe to it.</p>
+		<p>
+			<button type="button" id="copycallink" class="btn btn-light">Copy the link for a subscription</button></a>
+			<a href="%%SERVERURL%%/api/ics.php?%%CALURL%%" target="_blank"><button type="button" class="btn btn-light">Download the file</button></a>	
+		</p>
+	</div>
+</div>
 
 <script>
 	var combiData = %%COMBIDATA%%;
@@ -234,4 +245,6 @@
 		$("input#plainlimit").val( sessionStorage.getItem('lastPlainDataLimit') )
 		$("form").submit()
 	});
+
+	clipboardButton("button#copycallink", "%%SERVERURL%%/api/ics.php?%%CALURL%%");
 </script>

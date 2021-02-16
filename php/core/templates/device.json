@@ -1,6 +1,8 @@
 {
 	"%%NOTEDISABLE%%" : "disable",
 	"%%NOTEMSG%%" : "",
+	"%%CALTOKEN%%" : "",
+	"%%NEWTOKENCODE%%" : "",
 	"multiples" : {
 		"Devices" : {
 			"%%NAME%%" : "Name",

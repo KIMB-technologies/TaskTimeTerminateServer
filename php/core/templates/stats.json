@@ -1,6 +1,6 @@
 {
 	"%%NOTEDISABLE%%" : "disable",
-	"%%CMDDISABLE%%" : "disable",
+	"%%DATADISABLE%%" : "disable",
 	"%%LESSDATADISABLE%%" : "disable",
 	"%%SHARESDIABLE%%" : "disable",
 	"%%NOTEMSG%%" : "",
@@ -22,5 +22,6 @@
 	"%%SINGLEDAYDATA%%" : "false",
 	"%%CMD%%" : "",
 	"%%GRAPHES%%" : "",
-	"%%DEFAULT_PLAIN_ELEMENTS%%" : ""
+	"%%DEFAULT_PLAIN_ELEMENTS%%" : "",
+	"%%CALURL%%" : ""
 }

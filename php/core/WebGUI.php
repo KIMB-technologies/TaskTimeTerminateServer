@@ -222,7 +222,7 @@ class WebGUI {
 
 		$r = $this->login->getGroupList();
 		$myGroup = $this->login->getGroup();
-		if( !empty($_POST['device']) || !empty($_GET['regenerate']) || !empty($_GET['delete']) || isset($_GET['remove']) ){
+		if( !empty($_POST['device']) || !empty($_GET['regenerate']) || !empty($_GET['delete']) || isset($_GET['remove']) || isset($_GET['newtoken']) ){
 			$device->setContent('NOTEDISABLE','');
 			if( !empty($_POST['device']) && InputParser::checkDeviceName($_POST['device']) ){
 				$name = $_POST['device'];
@@ -278,6 +278,10 @@ class WebGUI {
 						'Deleted session!': 'Error deleting session!'
 				);
 			}
+			else if(isset($_GET['newtoken']) && $_GET['newtoken'] === $_SESSION['newTokenCode']){
+				$r->setValue([$myGroup, 'caltoken'], Utilities::randomCode(50, Utilities::ID));
+				$device->setContent('NOTEMSG', 'Regenerated the calendar token!');
+			}
 			else{
 				$device->setContent('NOTEMSG','Invalid format!');
 			}
@@ -312,6 +316,10 @@ class WebGUI {
 			}
 			$device->setMultipleContent('Data', $ds);
 		}
+
+		$device->setContent('CALTOKEN', $r->getValue([$this->login->getGroup(), 'caltoken']));
+		$_SESSION['newTokenCode'] = Utilities::randomCode(10, Utilities::CODE);
+		$device->setContent('NEWTOKENCODE', $_SESSION['newTokenCode']);
 	}
 
 	public function addTaskRecord() : void {

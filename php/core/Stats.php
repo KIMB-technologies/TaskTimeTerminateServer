@@ -20,46 +20,38 @@ class Stats {
 	private Template $temp;
 	private Login $login;
 	private Share $share;
+	private DataAccess $dataAccess;
+	private Calendar $calendar;
 
 	public function __construct( Template $temp, Login $login ) {
 		$this->login = $login;
 		$this->temp = $temp;
 		$this->share = new Share($this->login);
-
+		$this->dataAccess = new DataAccess($this->login, $this->share);
+		$this->calendar = new Calendar($this->login);
+		
 		$this->setUpHtml();
 
 		if( $_SERVER['REQUEST_METHOD'] === 'POST' ){
-			$cmd = $this->paramsToCmd();
-			if( !empty($cmd) ){
-				$data = new TTTStats($cmd, API::getStorageDir($this->login->getGroup()));
-				$allData = $data->getAllResults();
+			$this->dataAccess->setParams(
+				$_POST["time"], $_POST["range-from"] ?? "", $_POST["range-to"] ?? "",
+				$_POST["cats"] ?? "", $_POST["names"] ?? "", $_POST["devices"] ?? array()
+			);
+			if( isset($_POST['shares']) && is_array($_POST['shares']) ){
+				$this->dataAccess->requestShare($_POST['shares']);
+			}
 
-				// share
-				if( isset($_POST['shares']) && is_array($_POST['shares']) ){
-					$withme = $this->share->getSharedWithMe();
-					$shares = array();
-					foreach($_POST['shares'] as $sh ){
-						if(is_string($sh)){
-							$sh = explode('::', $sh);
-							$gr = preg_replace('/[^A-Za-z0-9]/', '', $sh[0]);
-							if(InputParser::checkCategoryInput($sh[1]) && !empty($gr) ){
-								if( in_array( array( 
-										'category' => $sh[1],
-										'group' => $gr
-								 	) , $withme )
-								){
-									if(!isset($shares[$gr])){
-										$shares[$gr] = array();
-									}
-									$shares[$gr][] = $sh[1];
-								}
-							}
-						}
-					}
-					$this->addShares($allData, $cmd, $shares);
-				}
+			if(!$this->dataAccess->hasError()){
+				$this->displayContent($this->dataAccess->getData());
 
-				$this->displayContent($allData);
+				$this->temp->setContent('DATADISABLE','');
+				$this->temp->setContent('CMD', 'ttt s ' . implode(' ', $this->dataAccess->getCmd()));
+				$this->temp->setContent('CALURL', $this->calendar->getLink( $this->dataAccess ) );
+			}
+			else{
+				$this->temp->setContent('NOTEDISABLE','');
+				$this->temp->setContent('NOTEMSG','Invalid input given!');
+				return array();
 			}
 		}
 	}
@@ -89,34 +81,6 @@ class Stats {
 			$this->temp->setContent('SINGLEDAYDATA', json_encode($data['today']));
 		}
 	} 
-
-	private function addShares( array &$allData, array $cmd, array $shares) : void {
-		if(in_array('-devices', $cmd)){
-			$did = array_search('-devices', $cmd);
-			unset($cmd[$did], $cmd[$did+1]);
-		}
-		if(!in_array('-cats', $cmd)){
-			$cmd[] = '-cats';
-			$cmd[] = '';
-		}
-		$cid = array_search('-cats', $cmd) + 1;
-
-		foreach($shares as $group => $cats){
-			$cmd[$cid] = implode(',', $cats);
-			$sd = new TTTStats($cmd, API::getStorageDir($group));
-			$data = $sd->getAllResults();
-			array_walk_recursive( $data, function (&$value, $key) use (&$group) {
-				if(in_array($key, ['name', 'category', 'Name', 'Category', 'Other devices', 'device'])){
-					$value = $group . '::' . $value;
-				}
-			});
-			foreach(['table','plain','combi','today'] as $key ){
-				if(isset($allData[$key]) && isset($data[$key]) ){
-					$allData[$key] = array_merge($allData[$key], $data[$key]);
-				}
-			}
-		}
-	}
 
 	private function arrayToTable(array $data) : string {
 		$table = "<table class=\"table table-striped table-responsive-sm statstable\">";
@@ -150,71 +114,6 @@ class Stats {
 			$table .= "</tr>";
 		}
 		return $table . "</table>";
-	}
-
-	private function paramsToCmd() : array {
-		$error = false;
-		$cmd = array();
-
-		$times = array("today", "day", "week", "month", "range", "all");
-		if( isset($_POST["time"]) && in_array($_POST["time"], $times)){
-			$cmd[] = $_POST["time"];
-		}
-		else{
-			$error = true;
-		}
-		
-		if($_POST["time"] === "range"){
-			if(
-				isset($_POST["range-from"]) && isset($_POST["range-to"])
-				&&
-				preg_match( TTTStatsData::DATE_PREG, $_POST["range-from"]) === 1 && preg_match( TTTStatsData::DATE_PREG, $_POST["range-to"]) === 1
-			){
-				$cmd[] = $_POST["range-from"];
-				$cmd[] = $_POST["range-to"];
-			}
-			else if( isset($_POST["range-from"]) && preg_match( TTTStatsData::DATE_PREG, $_POST["range-from"]) === 1 ){
-				$cmd[] = $_POST["range-from"];
-			}
-			else if( isset($_POST["range-to"]) && preg_match( TTTStatsData::DATE_PREG, $_POST["range-to"]) === 1){
-				$cmd[] = $_POST["range-to"];
-			}
-			else{
-				$error = true;
-			}
-		}
-
-		if(!empty($_POST["cats"]) && preg_match('/^[A-Za-z\-\,]+$/', $_POST["cats"]) === 1){
-			$cmd[] = '-cats';
-			$cmd[] = $_POST["cats"];
-		}
-
-		if(!empty($_POST["names"]) && preg_match('/^[A-Za-z0-9\_\-\,]+$/', $_POST["names"]) === 1){
-			$cmd[] = '-names';
-			$cmd[] = $_POST["names"];
-		}
-
-		if(!empty($_POST["devices"]) && is_array($_POST["devices"])){
-			$dev = implode(',', $_POST["devices"]);
-			if(preg_match('/^[A-Za-z0-9\-\,]+$/', $dev) === 1){
-				$cmd[] = '-devices';
-				$cmd[] = $dev;
-			}
-			else{
-				$error = true;
-			}
-		}
-
-		if($error){
-			$this->temp->setContent('NOTEDISABLE','');
-			$this->temp->setContent('NOTEMSG','Invalid input given!');
-			return array();
-		}
-		else{
-			$this->temp->setContent('CMDDISABLE','');
-			$this->temp->setContent('CMD', 'ttt s ' . implode(' ', $cmd));
-			return $cmd;
-		}
 	}
 
 	private function setUpHtml(){
