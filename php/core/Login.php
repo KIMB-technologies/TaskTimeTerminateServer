@@ -24,8 +24,13 @@ class Login {
 		if(!empty($group) && !empty($client) && !empty($token)){
 			$this->apiClientLogin($group, $client, $token);
 		}
-		else if(!empty($group) && !empty($token)){
-			$this->sessionLogin($group, $token);
+		else if(!empty($group) && !empty($token) ){
+			if(TaskTimeTerminate === 'GUI'){
+				$this->sessionLogin($group, $token);
+			}
+			else {
+				$this->calendarLogin($group, $token);
+			}
 		}
 		else if( TaskTimeTerminate === 'GUI' && session_status() === PHP_SESSION_ACTIVE ){
 			$this->userSessionLogin();
@@ -41,6 +46,17 @@ class Login {
 					$this->logUserIn($group, $client);
 					return;
 				}
+			}
+		}
+		$this->logUserOut();
+	}
+
+	public function calendarLogin(string $group, string $token) : void {
+		if( $this->groupList->isValue([$group]) ){
+			$grToken = $this->groupList->getValue([$group, 'caltoken']);
+			if( !empty($grToken) && $token === $grToken ){
+				$this->logUserIn($group);
+				return;
 			}
 		}
 		$this->logUserOut();
