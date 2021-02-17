@@ -14,11 +14,9 @@ defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
 class Calendar {
 
 	private const CAL_EOL = "\r\n";
-	private string $timezone = "";
 
 	public function __construct( Login $login ) {
 		$this->login = $login;
-		$this->timezone = Config::getTimezone()->getName();
 	}
 
 	public function generateICS(DataAccess $da) : string {
@@ -65,7 +63,7 @@ class Calendar {
 	}
 
 	private function calTimeRow(int $time,  string $rowname) : string {
-		return $rowname . ';TZID=' . $this->timezone . ':'. date('Ymd\THis', $time ) .'Z' . self::CAL_EOL;
+		return $rowname . ':'. gmdate('Ymd\THis', $time ) .'Z' . self::CAL_EOL;
 	}
 
 	public function getLink(DataAccess $da) : string {
