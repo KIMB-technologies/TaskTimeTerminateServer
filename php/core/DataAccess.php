@@ -76,8 +76,8 @@ class DataAccess {
 			$this->cmdSemantical['names'] = $names;
 		}
 	
-		if(!empty($_POST["devices"]) && is_array($_POST["devices"])){
-			$dev = implode(',', $_POST["devices"]);
+		if(!empty($devices) && is_array($devices)){
+			$dev = implode(',', $devices);
 			if(preg_match('/^[A-Za-z0-9\-\,]+$/', $dev) === 1){
 				$this->cmd[] = '-devices';
 				$this->cmd[] = $dev;
