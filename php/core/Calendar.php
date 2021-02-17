@@ -13,8 +13,12 @@ defined( 'TaskTimeTerminate' ) or die('Invalid Endpoint!');
 
 class Calendar {
 
+	private const CAL_EOL = "\r\n";
+	private string $timezone = "";
+
 	public function __construct( Login $login ) {
 		$this->login = $login;
+		$this->timezone = Config::getTimezone()->getName();
 	}
 
 	public function generateICS(DataAccess $da) : string {
@@ -23,30 +27,45 @@ class Calendar {
 	}
 
 	private function toICS(array $plainData) : string {
-		$cal = '';
-		$eol = "\r\n";
+		$cal = 'BEGIN:VCALENDAR' . self::CAL_EOL;
+		$cal .= 'VERSION:2.0' . self::CAL_EOL;
+		$cal .= 'PRODID:https://github.com/KIMB-technologies/TaskTimeTerminateServer' . self::CAL_EOL;
+		$cal .= 'CALSCALE:GREGORIAN' . self::CAL_EOL;
+		$cal .= 'METHOD:PUBLISH' . self::CAL_EOL;
 
-		$cal .= 'BEGIN:VCALENDAR' . $eol;
-		$cal .= 'VERSION:2.0' . $eol;
-		$cal .= 'PRODID:https://github.com/KIMB-technologies/TaskTimeTerminateServer' . $eol;
-		$cal .= 'CALSCALE:GREGORIAN' . $eol;
-		$cal .= 'METHOD:PUBLISH' . $eol;
-
-		$tz = date_default_timezone_get();
-		
-		foreach($plainData as $dat ){
-			$cal .= 'BEGIN:VEVENT' . $eol;
-			$cal .= 'UID:' . uniqid() . '@ttt-server' . $eol;
-
-			$cal .= 'SUMMARY:' . $dat['category'] . ' - ' . $dat['name'] . $eol;
-			$cal .= 'DTSTART;TZID=' . $tz . ':'. date('Ymd', $dat['begin']) .'T'. date('His', $dat['begin']) .'Z' . $eol;
-			$cal .= 'DTEND;TZID=' . $tz . ':'. date('Ymd', $dat['end']) .'T'. date('His', $dat['end']) .'Z' . $eol;
-			
-			$cal .= 'END:VEVENT' . $eol;
+		// name, category, begin, end
+		$current = array("","", 0, 0);
+		foreach( $plainData as $dat ){ // will be in order current to past (sees sorting in TTTStats::printDataset())
+			if(
+				$dat['name'] === $current[0] && $dat['category'] === $current[1] &&
+				abs( $current[2] - $dat['end'] ) < 120
+			){ // group to one "event"?
+				$current[2] = $dat['begin'];
+				continue;
+			}
+			if(!empty($current[0]) && !empty($current[1])){
+				$cal .= $this->calEvent(...$current);
+			}
+			$current = array($dat['name'], $dat['category'], $dat['begin'], $dat['end']);
+		}
+		if(!empty($current[0]) && !empty($current[1])){
+			$cal .= $this->calEvent(...$current);
 		}
 		
-		$cal .= 'END:VCALENDAR' . $eol;
-		return $cal;
+		return $cal . 'END:VCALENDAR' . self::CAL_EOL;
+	}
+
+	private function calEvent(string $name, string $category, int $begin, int $end) : string {
+		return 'BEGIN:VEVENT' . self::CAL_EOL
+			. 'UID:' . sha1($name . $category . $begin . $end) . '@ttt-server' . self::CAL_EOL
+			. 'SUMMARY:' . mb_strcut($name . ' - ' . $category, 0, 75 - 8) . self::CAL_EOL // maximal 75 octets per line
+			. $this->calTimeRow($begin, 'DTSTART')
+			. $this->calTimeRow($end, 'DTEND')
+			.'END:VEVENT' . self::CAL_EOL;
+	}
+
+	private function calTimeRow(int $time,  string $rowname) : string {
+		return $rowname . ';TZID=' . $this->timezone . ':'. date('Ymd\THis', $time ) .'Z' . self::CAL_EOL;
 	}
 
 	public function getLink(DataAccess $da) : string {
