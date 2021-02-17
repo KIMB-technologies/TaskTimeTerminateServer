@@ -83,7 +83,7 @@ table.accounttable th {
 	text-align: center;
 }
 
-table.statstable, div.graphbox {
+table.statstable, div.graphbox, div#viewbox {
 	width: calc(100%-10px);
 }
 

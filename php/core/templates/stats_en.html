@@ -176,6 +176,8 @@
 	<div class="graphbox">
 		<canvas id="maingraph"></canvas>
 	</div>
+	<div id="viewbox">
+	</div>
 <div class="inner"><!-- reopen for main.html -->
 
 <div class="container mt-2 %%DATADISABLE%%">
@@ -201,28 +203,56 @@
 		$("select#graphselect").append('<option value="'+g+'">'+g+'</option>');
 	});
 	var chart = null;
+	var removeView = null
 
 	$("button#displaygraph").click( () => {
 		var url = loadUrl + $("select#graphselect").val()  + '.js?%%VERSIONSEED%%';
+		createGraph = null, displayView = null;
 		$.getScript( url, () => {
-			if( typeof createGraph === "function" && ( combiData.length > 0 || plainData.length > 0 || singleDayData !== false ) ){
+			if( combiData.length > 0 || plainData.length > 0 || singleDayData !== false ) {
 				if(chart !== null){
 					chart.destroy();
+					chart = null;
 				}
-				// text color according to theme
-				Chart.defaults.global.defaultFontColor = getComputedStyle(document.documentElement).getPropertyValue('--main-text-color');
+				if( typeof removeView === "function" ){
+					removeView()
+					removeView = null;
+				}
 				
-				chart = createGraph(
-					combiData,
-					plainData,
-					singleDayData,
-					document.getElementById('maingraph').getContext('2d')
-				);
+				// is a chart?
+				if( typeof createGraph === "function" ){
+					// show right element
+					$("div.graphbox").css("display", "block");
+					$("div#viewbox").css("display", "none");
 
-				// grid color according to theme 
-				Object.keys(chart.scales).forEach(k => {
-					chart.scales[k].options.gridLines.color = getComputedStyle(document.documentElement).getPropertyValue('--chart-grid-color');
-				})
+					// text color according to theme
+					Chart.defaults.global.defaultFontColor = getComputedStyle(document.documentElement).getPropertyValue('--main-text-color');
+					
+					chart = createGraph(
+						combiData,
+						plainData,
+						singleDayData,
+						document.getElementById('maingraph').getContext('2d')
+					);
+
+					// grid color according to theme 
+					Object.keys(chart.scales).forEach(k => {
+						chart.scales[k].options.gridLines.color = getComputedStyle(document.documentElement).getPropertyValue('--chart-grid-color');
+					})
+				}
+				// is another type of view
+				else if(typeof displayView === "function" ){
+					// show right element
+					$("div.graphbox").css("display", "none");
+					$("div#viewbox").css("display", "block");
+
+					removeView = displayView(
+						combiData,
+						plainData,
+						singleDayData,
+						$("div#viewbox")
+					);
+				}
 			}
 		});
 	});
