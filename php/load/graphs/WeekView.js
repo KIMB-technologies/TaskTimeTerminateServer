@@ -19,8 +19,8 @@ function displayView(combiData, plainData, singleDayData, element){
 
 	function newEvent(name, category, begin, end){
 		return new DayPilot.Event({
-			start: new DayPilot.Date(new Date(begin * 1000)),
-			end: new DayPilot.Date(new Date(end * 1000)),
+			start: new DayPilot.Date(new Date(begin * 1000), true),
+			end: new DayPilot.Date(new Date(end * 1000), true),
 			id: DayPilot.guid(),
 			text: name + (multipleCats ? (" – " + category) : ""),
 			backColor: multipleCats ? colorsCategories[category] : colorsNames[name]
@@ -30,7 +30,7 @@ function displayView(combiData, plainData, singleDayData, element){
 	function setup() {
 		element.html('<div class="m-2"><div style="display: flex;"><div style="margin-right: 10px;"><div id="nav"></div></div><div style="flex-grow: 1;"><div id="dp"></div></div></div></div>');
 
-		var startDate = new DayPilot.Date(new Date(plainData[0].begin * 1000));
+		var startDate = new DayPilot.Date(new Date(plainData[0].begin * 1000), true);
 
 		var nav = new DayPilot.Navigator("nav");
 		nav.showMonths = 3;
