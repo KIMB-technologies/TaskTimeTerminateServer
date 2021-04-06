@@ -19,7 +19,7 @@ class TTTTime {
 			't' => 30*24*60*60, // month (one of twelve)
 			'w' => 7*24*60*60, // week
 			'd' => 24*60*60, // day
-			'a' => 6*60*60, // work-day (8 hours)
+			'a' => 8*60*60, // work-day (8 hours)
 			'h' => 60*60, // hour
 			'm' => 60, // minute
 			's' => 1 // second
