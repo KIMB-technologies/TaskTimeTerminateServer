@@ -15,7 +15,9 @@ class Calendar {
 
 	private const CAL_EOL = "\r\n";
 
-	public function __construct( Login $login ) {
+	private Login $login;
+
+	public function __construct(Login $login) {
 		$this->login = $login;
 	}
 

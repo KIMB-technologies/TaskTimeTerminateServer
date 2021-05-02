@@ -39,7 +39,7 @@ class Config {
 	}
 
 	public static function getImprintData() : ?array {
-		if(empty($_ENV['CONF_IMPRESSUMURL']) || empty($_ENV['CONF_IMPRESSUMURL'])){
+		if(empty($_ENV['CONF_IMPRESSUMURL']) || empty($_ENV['CONF_IMPRESSUMNAME'])){
 			return null;
 		}
 		return array(

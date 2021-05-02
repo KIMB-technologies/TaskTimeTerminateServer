@@ -21,7 +21,7 @@ class DataAccess {
 	private array $cmd = array();
 	private array $cmdSemantical = array();
 
-	private array $allShares = array();
+	private array $shares = array();
 
 	public function __construct( Login $login, Share $share ) {
 		$this->login = $login;
