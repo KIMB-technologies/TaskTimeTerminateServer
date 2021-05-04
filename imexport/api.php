@@ -5,7 +5,7 @@ if( php_sapi_name() !== 'cli' ){
 
 function createAPIReadline() : APIClient {
 	$check = array(
-		'URI' => fn(string $u) => @filter_var($u, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED | FILTER_FLAG_SCHEME_REQUIRED),
+		'URI' => fn(string $u) => @filter_var($u, FILTER_VALIDATE_URL),
 		'Group/ Username' => fn(string $g) => preg_match('/^[A-Za-z0-9]+$/', $g) === 1,
 		'Device' => fn(string $n) => preg_match( '/^[A-Za-z0-9\-]+$/', $n) === 1,
 		'Device Token' => fn(string $t) => preg_match('/^[A-Za-z0-9]+$/', $t) === 1
