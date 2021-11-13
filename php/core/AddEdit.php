@@ -23,7 +23,10 @@ class AddEdit {
 		$this->serverDir = API::getStorageDir($this->login->getGroup(), 'Server');
 
 		if( $_SERVER['REQUEST_METHOD'] === 'POST' ){
-			$this->addNew();
+			$addDay = $this->addNew();
+			if(!is_null($addDay)){
+				$_GET['day'] = $addDay;
+			}
 		}
 		if( isset( $_GET['day'] ) ){
 			$this->viewDay($_GET['day'] . '.json');
@@ -69,7 +72,7 @@ class AddEdit {
 		}
 	}
 
-	private function addNew() : void {
+	private function addNew() : ?string {
 		$this->temp->setContent('NOTEDISABLE','');
 
 		$fourDigits = array('begin_Y', 'end_Y');
@@ -107,7 +110,7 @@ class AddEdit {
 					$r = new JSONReader(API::getStorageDir($this->login->getGroup(), 'Server', true) . date('Y-m-d', $begin));
 					if($r->setValue([null], $task)){
 						$this->temp->setContent('NOTEMSG','Added task.');
-						return;
+						return date('Y-m-d', $begin);
 					}
 				}
 				$this->temp->setContent('NOTEMSG','Unable to save new task.');
@@ -116,6 +119,7 @@ class AddEdit {
 				$this->temp->setContent('NOTEMSG','End has to be later than begin!');
 			}
 		}
+		return null;
 	}
 
 	private function initDir() : bool{
@@ -140,7 +144,7 @@ class AddEdit {
 	private function setUpHtml(){
 		if( is_dir($this->serverDir) ){
 			$ds = array();
-			foreach( scandir($this->serverDir) as $d){
+			foreach( scandir($this->serverDir, SCANDIR_SORT_DESCENDING) as $d){
 				if( preg_match(API::FILENAME_PREG, $d) === 1 ){
 					$ds[] = array("DAY" => substr($d, 0, -5));
 				}
