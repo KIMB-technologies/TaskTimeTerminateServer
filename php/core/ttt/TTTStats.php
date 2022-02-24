@@ -28,26 +28,42 @@ class TTTStats {
 
 	private function parseCommands(array $commands) : void {
 		switch( $commands[0] ) {
-			case "day":
-				$this->backUntil(time() - 86400, array_slice($commands, 1));
+			case "cDay":
+				$commands = array_slice($commands, 1);
+				$this->todayview = true;
+				$this->backUntil(strtotime("today"), $commands);
+			case "cWeek":
+				$this->backUntil(strtotime("last Monday"), array_slice($commands, 1));
 				break;
-			case "week":
-				$this->backUntil(time() - 604800, array_slice($commands, 1));
+			case "cMonth":
+				$this->backUntil(strtotime(date("Y-m")."-01"), array_slice($commands, 1));
 				break;
-			case "month":
-				$this->backUntil(time() - 2628000, array_slice($commands, 1));
+			case "cYear":
+				$this->backUntil(strtotime(date("Y")."-01-01"), array_slice($commands, 1));
 				break;
+			
+			case "lDay":
+				$this->backUntil(time() - 24*60*60, array_slice($commands, 1));
+				break;
+			case "lWeek":
+				$this->backUntil(time() - 7*24*60*60, array_slice($commands, 1));
+				break;
+			case "lMonth":
+				$this->backUntil(time() - 30*24*60*60, array_slice($commands, 1));
+				break;
+			case "lYear":
+				$this->backUntil(time() - 365*24*60*60, array_slice($commands, 1));
+				break;
+
 			case "all":
 				$this->backUntil(0, array_slice($commands, 1));
 				break;
 			case "range":
 				$this->rangeStats(array_slice($commands, 1));
 				break;
-			case "today":
-				$commands = array_slice($commands, 1);
+			
 			default:
-				$this->todayview = true;
-				$this->backUntil(strtotime("today"), $commands);
+				# will not happen, cause command checked in DataAccess
 		}
 	}
 

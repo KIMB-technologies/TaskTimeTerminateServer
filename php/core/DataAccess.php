@@ -31,8 +31,8 @@ class DataAccess {
 	public function setParams(string $time, string $rFrom, string $rTo, string $cats, string $names, array $devices ) : void {
 		$this->cmd = array();
 		$this->cmdSemantical = array();
-	
-		$times = array("today", "day", "week", "month", "range", "all");
+
+		$times = array("cDay", "cWeek", "cMonth", "cYear", "lDay", "lWeek", "lMonth", "lYear", "range", "all");
 		if( isset($time) && in_array($time, $times)){
 			$this->cmd[] = $time;
 			$this->cmdSemantical['time'] = $time;
