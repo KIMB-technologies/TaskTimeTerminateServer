@@ -32,6 +32,7 @@ class TTTStats {
 				$commands = array_slice($commands, 1);
 				$this->todayview = true;
 				$this->backUntil(strtotime("today"), $commands);
+				break;
 			case "cWeek":
 				$this->backUntil(strtotime("last Monday"), array_slice($commands, 1));
 				break;
