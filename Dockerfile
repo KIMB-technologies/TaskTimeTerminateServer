@@ -1,4 +1,4 @@
-FROM kimbtechnologies/php_nginx:8-latest 
+FROM kimbtechnologies/php_nginx:latest 
 
 # enable get_browser() in PHP
 RUN mkdir /start/ \
